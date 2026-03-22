@@ -208,6 +208,49 @@ textarea{min-height:64px;line-height:1.5}
       <span class="bt">Generate Email</span>
       <div class="spin"></div>
     </button>
+
+    <div id="designPanel" style="display:none">
+      <div class="sec-lbl">&#9650; Section Padding</div>
+      <div class="fstack" style="gap:10px">
+        <div class="fg"><label>Hero / Header</label><div style="display:flex;align-items:center;gap:8px"><input type="range" id="padHero" min="8" max="80" value="40" oninput="applyDesign()" style="flex:1;accent-color:#af3630"><span id="padHeroV" style="font-size:10px;color:#af3630;width:28px;text-align:right">40</span></div></div>
+        <div class="fg"><label>Copy Section</label><div style="display:flex;align-items:center;gap:8px"><input type="range" id="padCopy" min="8" max="80" value="32" oninput="applyDesign()" style="flex:1;accent-color:#af3630"><span id="padCopyV" style="font-size:10px;color:#af3630;width:28px;text-align:right">32</span></div></div>
+        <div class="fg"><label>Products Section</label><div style="display:flex;align-items:center;gap:8px"><input type="range" id="padProds" min="8" max="80" value="24" oninput="applyDesign()" style="flex:1;accent-color:#af3630"><span id="padProdsV" style="font-size:10px;color:#af3630;width:28px;text-align:right">24</span></div></div>
+        <div class="fg"><label>CTA Section</label><div style="display:flex;align-items:center;gap:8px"><input type="range" id="padCTA" min="8" max="80" value="36" oninput="applyDesign()" style="flex:1;accent-color:#af3630"><span id="padCTAV" style="font-size:10px;color:#af3630;width:28px;text-align:right">36</span></div></div>
+        <div class="fg"><label>Footer</label><div style="display:flex;align-items:center;gap:8px"><input type="range" id="padFooter" min="8" max="60" value="24" oninput="applyDesign()" style="flex:1;accent-color:#af3630"><span id="padFooterV" style="font-size:10px;color:#af3630;width:28px;text-align:right">24</span></div></div>
+      </div>
+
+      <div class="sec-lbl" style="margin-top:14px">&#9650; Font Sizes</div>
+      <div class="fstack" style="gap:10px">
+        <div class="fg"><label>Headline</label><div style="display:flex;align-items:center;gap:8px"><input type="range" id="fsHeadline" min="20" max="72" value="46" oninput="applyDesign()" style="flex:1;accent-color:#af3630"><span id="fsHeadlineV" style="font-size:10px;color:#af3630;width:28px;text-align:right">46</span></div></div>
+        <div class="fg"><label>Subheadline</label><div style="display:flex;align-items:center;gap:8px"><input type="range" id="fsSubhead" min="10" max="36" value="16" oninput="applyDesign()" style="flex:1;accent-color:#af3630"><span id="fsSubheadV" style="font-size:10px;color:#af3630;width:28px;text-align:right">16</span></div></div>
+        <div class="fg"><label>Body Copy</label><div style="display:flex;align-items:center;gap:8px"><input type="range" id="fsBody" min="10" max="24" value="15" oninput="applyDesign()" style="flex:1;accent-color:#af3630"><span id="fsBodyV" style="font-size:10px;color:#af3630;width:28px;text-align:right">15</span></div></div>
+        <div class="fg"><label>CTA Headline</label><div style="display:flex;align-items:center;gap:8px"><input type="range" id="fsCTAHead" min="16" max="56" value="32" oninput="applyDesign()" style="flex:1;accent-color:#af3630"><span id="fsCTAHeadV" style="font-size:10px;color:#af3630;width:28px;text-align:right">32</span></div></div>
+        <div class="fg"><label>CTA Button</label><div style="display:flex;align-items:center;gap:8px"><input type="range" id="fsCTABtn" min="10" max="22" value="13" oninput="applyDesign()" style="flex:1;accent-color:#af3630"><span id="fsCTABtnV" style="font-size:10px;color:#af3630;width:28px;text-align:right">13</span></div></div>
+        <div class="fg"><label>Product Name</label><div style="display:flex;align-items:center;gap:8px"><input type="range" id="fsProdName" min="10" max="24" value="14" oninput="applyDesign()" style="flex:1;accent-color:#af3630"><span id="fsProdNameV" style="font-size:10px;color:#af3630;width:28px;text-align:right">14</span></div></div>
+        <div class="fg"><label>Label / Tag</label><div style="display:flex;align-items:center;gap:8px"><input type="range" id="fsLabel" min="8" max="18" value="12" oninput="applyDesign()" style="flex:1;accent-color:#af3630"><span id="fsLabelV" style="font-size:10px;color:#af3630;width:28px;text-align:right">12</span></div></div>
+      </div>
+
+      <div class="sec-lbl" style="margin-top:14px">&#9650; Edit Text</div>
+      <div class="fstack" style="gap:8px">
+        <div class="fg"><label>Label / Tag line</label><input type="text" id="etLabel" placeholder="e.g. HEY {{ person.first_name }}" oninput="applyDesign()"></div>
+        <div class="fg"><label>Headline</label><input type="text" id="etHeadline" placeholder="Main headline" oninput="applyDesign()"></div>
+        <div class="fg"><label>Red word (end of headline)</label><input type="text" id="etRed" placeholder="e.g. GONE." oninput="applyDesign()"></div>
+        <div class="fg"><label>Subheadline</label><input type="text" id="etSubhead" placeholder="Supporting line" oninput="applyDesign()"></div>
+        <div class="fg"><label>Intro paragraph</label><textarea id="etIntro" placeholder="Opening paragraph…" style="min-height:56px" oninput="applyDesign()"></textarea></div>
+        <div class="fg"><label>Body paragraph 1</label><textarea id="etBody1" placeholder="Core sell paragraph…" style="min-height:56px" oninput="applyDesign()"></textarea></div>
+        <div class="fg"><label>Body paragraph 2</label><textarea id="etBody2" placeholder="Optional third paragraph…" style="min-height:48px" oninput="applyDesign()"></textarea></div>
+        <div class="fg"><label>Urgency line</label><input type="text" id="etUrgency" placeholder="e.g. Order by April 12" oninput="applyDesign()"></div>
+        <div class="fg"><label>Matt's quote</label><textarea id="etQuote" placeholder="Quote from Matt…" style="min-height:56px" oninput="applyDesign()"></textarea></div>
+        <div class="fg"><label>CTA headline</label><input type="text" id="etCTAHead" placeholder="e.g. READY TO ORDER?" oninput="applyDesign()"></div>
+        <div class="fg"><label>CTA subtext</label><input type="text" id="etCTASub" placeholder="One line under CTA headline" oninput="applyDesign()"></div>
+        <div class="fg"><label>CTA button text</label><input type="text" id="etCTABtn" placeholder="e.g. Order Your Box" oninput="applyDesign()"></div>
+        <div class="fg"><label>Sign-off tagline</label><input type="text" id="etSignoff" placeholder="e.g. Grass-fed · Hand-cut" oninput="applyDesign()"></div>
+        <div class="fg"><label>P.S. line</label><input type="text" id="etPS" placeholder="Optional P.S." oninput="applyDesign()"></div>
+      </div>
+    </div>
+
+    <button id="designToggle" onclick="toggleDesign()" style="display:none;background:var(--s2);border:1px solid var(--bd2);color:var(--txt2);font-family:var(--ff);font-size:11px;font-weight:600;padding:8px;border-radius:5px;cursor:pointer;width:100%;transition:all .15s;letter-spacing:.04em">&#9650; Design Controls</button>
+
   </aside>
 
   <main class="cv" id="cv">
@@ -531,12 +574,14 @@ function tc() {
 }
 
 function mmFooter(sUrl) {
-  return '<tr><td bgcolor="#111111" style="background-color:#111111;padding:24px 32px;text-align:center;"><img src="' + LOGO + '" alt="Meat Merchant" width="100" style="display:block;margin:0 auto 14px auto;"><p style="margin:0 0 6px 0;font-size:12px;color:#555555;">' + ADDR + '</p><p style="margin:0 0 12px 0;font-size:12px;color:#444444;">You&rsquo;re receiving this as part of the Meat Merchant family.</p><p style="margin:0;font-size:12px;"><a href="{% unsubscribe %}" style="color:#af3630;text-decoration:none;">Unsubscribe</a> &nbsp;&middot;&nbsp; <a href="' + sUrl + '/policies/privacy-policy" style="color:#af3630;text-decoration:none;">Privacy Policy</a></p></td></tr>';
+  var dv = getDesign(); var fp = dv.padFooter;
+  return '<tr><td bgcolor="#111111" style="background-color:#111111;padding:' + fp + 'px 32px;text-align:center;"><img src="' + LOGO + '" alt="Meat Merchant" width="100" style="display:block;margin:0 auto 14px auto;"><p style="margin:0 0 6px 0;font-size:12px;color:#555555;">' + ADDR + '</p><p style="margin:0 0 12px 0;font-size:12px;color:#444444;">You&rsquo;re receiving this as part of the Meat Merchant family.</p><p style="margin:0;font-size:12px;"><a href="{% unsubscribe %}" style="color:#af3630;text-decoration:none;">Unsubscribe</a> &nbsp;&middot;&nbsp; <a href="' + sUrl + '/policies/privacy-policy" style="color:#af3630;text-decoration:none;">Privacy Policy</a></p></td></tr>';
 }
 function mmDiv() { return '<tr><td bgcolor="#af3630" style="background-color:#af3630;height:4px;font-size:0;line-height:0;">&nbsp;</td></tr>'; }
 function mmHero(d) {
-  var t = tc();
-  return '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:40px 32px 32px 32px;"><img src="' + LOGO + '" alt="Meat Merchant" width="130" style="display:block;margin:0 0 36px 0;' + (_theme==='cream'?'filter:brightness(0);':'') + '"><p style="margin:0 0 12px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;" data-ed contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0;font-size:46px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.0;font-family:Impact,\'Arial Black\',sans-serif;" data-ed contenteditable="true">' + hlHtml(d) + '</h1></td></tr>';
+  var t = tc(); var dv = getDesign();
+  var p = dv.padHero;
+  return '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:' + p + 'px 32px ' + p + 'px 32px;"><img src="' + LOGO + '" alt="Meat Merchant" width="130" style="display:block;margin:0 0 36px 0;' + (_theme==='cream'?'filter:brightness(0);':'') + '"><p style="margin:0 0 12px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;" data-ed contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0;font-size:' + dv.fsHeadline + 'px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.0;font-family:Impact,\'Arial Black\',sans-serif;" data-ed contenteditable="true">' + hlHtml(d) + '</h1></td></tr>';
 }
 function hlHtml(d) {
   if (!d.headlineRed || !d.headline) return esc(d.headline || '');
@@ -546,8 +591,9 @@ function hlHtml(d) {
   return esc(h.substring(0, idx)) + '<span style="color:#af3630;">' + esc(r) + '</span>' + esc(h.substring(idx + r.length));
 }
 function mmCopy(d) {
-  var t = tc();
-  return '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:32px 32px 28px 32px;"><p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.intro) + '</p>' + (d.body1?'<p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.body1) + '</p>':'') + (d.body2?'<p style="margin:0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.body2) + '</p>':'') + '</td></tr>';
+  var t = tc(); var dv = getDesign();
+  var p = dv.padCopy;
+  return '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:' + p + 'px 32px ' + p + 'px 32px;"><p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.intro) + '</p>' + (d.body1?'<p style="margin:0 0 16px 0;font-size:' + dv.fsBody + 'px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.body1) + '</p>':'') + (d.body2?'<p style="margin:0;font-size:' + dv.fsBody + 'px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.body2) + '</p>':'') + '</td></tr>';
 }
 function mmQuote(d) {
   return '<tr><td bgcolor="#af3630" style="background-color:#af3630;padding:28px 32px;"><p style="margin:0 0 10px 0;font-size:11px;font-weight:700;letter-spacing:2px;color:#ffffff;text-transform:uppercase;">&#x1F525; Matt The Butcher Says</p><p style="margin:0;font-size:15px;line-height:1.8;color:#ffffff;font-style:italic;" data-ed contenteditable="true">&ldquo;' + esc(d.quoteText) + '&rdquo;</p></td></tr>';
@@ -558,18 +604,20 @@ function mmUrgency(d) {
   return '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:14px 32px;text-align:center;"><p style="margin:0;font-size:13px;font-weight:700;letter-spacing:1px;color:#af3630;text-transform:uppercase;" data-ed contenteditable="true">&#x26A1; ' + esc(d.urgency) + '</p></td></tr>';
 }
 function mmCTA(d, ctaUrl) {
-  var t = tc();
-  return '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:36px 32px;text-align:center;"><h2 style="margin:0 0 10px 0;font-size:32px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.1;font-family:Impact,\'Arial Black\',sans-serif;" data-ed contenteditable="true">' + esc(d.ctaHeadline) + '</h2><p style="margin:0 0 28px 0;font-size:14px;color:' + t.muted + ';" data-ed contenteditable="true">' + esc(d.ctaSubtext) + '</p><table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr><td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + ctaUrl + '" style="display:inline-block;padding:18px 44px;font-size:13px;font-weight:700;letter-spacing:2px;color:#ffffff;text-decoration:none;text-transform:uppercase;" data-ed contenteditable="true">' + esc(d.ctaText) + ' &rarr;</a></td></tr></table>' + (d.signoff?'<p style="margin:16px 0 0 0;font-size:13px;color:' + t.dim + ';" data-ed contenteditable="true">' + esc(d.signoff) + '</p>':'') + (d.ps?'<p style="margin:12px 0 0 0;font-size:13px;color:#af3630;font-weight:600;" data-ed contenteditable="true"><strong>P.S.</strong> ' + esc(d.ps) + '</p>':'') + '</td></tr>';
+  var t = tc(); var dv = getDesign();
+  var p = dv.padCTA;
+  return '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:' + p + 'px 32px;text-align:center;"><h2 style="margin:0 0 10px 0;font-size:' + dv.fsCTAHead + 'px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.1;font-family:Impact,\'Arial Black\',sans-serif;" data-ed contenteditable="true">' + esc(d.ctaHeadline) + '</h2><p style="margin:0 0 28px 0;font-size:14px;color:' + t.muted + ';" data-ed contenteditable="true">' + esc(d.ctaSubtext) + '</p><table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr><td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + ctaUrl + '" style="display:inline-block;padding:18px 44px;font-size:' + dv.fsCTABtn + 'px;font-weight:700;letter-spacing:2px;color:#ffffff;text-decoration:none;text-transform:uppercase;" data-ed contenteditable="true">' + esc(d.ctaText) + ' &rarr;</a></td></tr></table>' + (d.signoff?'<p style="margin:16px 0 0 0;font-size:13px;color:' + t.dim + ';" data-ed contenteditable="true">' + esc(d.signoff) + '</p>':'') + (d.ps?'<p style="margin:12px 0 0 0;font-size:13px;color:#af3630;font-weight:600;" data-ed contenteditable="true"><strong>P.S.</strong> ' + esc(d.ps) + '</p>':'') + '</td></tr>';
 }
 function mmProds(prods) {
   if (!prods || !prods.length) return '';
-  var t = tc();
+  var t = tc(); var dv = getDesign();
+  var pp = dv.padProds;
   var cols = prods.length <= 2 ? prods.length : prods.length <= 4 ? 2 : 3;
   var w = cols === 1 ? '100%' : cols === 2 ? '50%' : '33%';
   var cells = prods.map(function(p) {
-    return '<td width="' + w + '" style="vertical-align:top;padding:0 8px 16px;">' +
+    return '<td width="' + w + '" style="vertical-align:top;padding:0 8px ' + pp + 'px;">' +
       (p.img ? '<img src="' + p.img + '" alt="' + esc(p.name) + '" width="100%" style="display:block;border-radius:3px;margin-bottom:8px;max-height:140px;object-fit:cover;">' : '') +
-      '<p style="margin:0 0 4px 0;font-size:14px;font-weight:700;color:' + t.head + ';">' + esc(p.name) + '</p>' +
+      '<p style="margin:0 0 4px 0;font-size:' + dv.fsProdName + 'px;font-weight:700;color:' + t.head + ';">' + esc(p.name) + '</p>' +
       (p.desc ? '<p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:' + t.muted + ';">' + esc(p.desc) + '</p>' : '') +
       ((p.was && p.now) ? '<p style="margin:0 0 2px 0;font-size:12px;color:' + t.muted + ';text-decoration:line-through;">' + esc(p.was) + '</p><p style="margin:0 0 10px 0;font-size:15px;font-weight:700;color:#af3630;">' + esc(p.now) + '</p>' : (p.now ? '<p style="margin:0 0 10px 0;font-size:14px;font-weight:700;color:#af3630;">' + esc(p.now) + '</p>' : '')) +
       (p.link ? '<table cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + esc(p.link) + '" style="display:inline-block;padding:8px 16px;font-size:11px;font-weight:700;letter-spacing:1.5px;color:#ffffff;text-decoration:none;text-transform:uppercase;">Buy Now</a></td></tr></table>' : '') +
@@ -602,7 +650,7 @@ function buildPreview(lid, d) {
     var cardRows = cardData.map(function(c){return '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:8px 32px 0;"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="' + t.card + '" style="background-color:' + t.card + ';padding:20px 22px;border-left:3px solid #af3630;"><p style="margin:0 0 5px 0;font-size:14px;font-weight:700;color:' + t.head + ';">' + c.t + '</p><p style="margin:0;font-size:13px;line-height:1.7;color:' + t.muted + ';">' + c.b + '</p></td></tr></table></td></tr>';}).join('');
     rows = mmHero(d) + hi + mmDiv() + '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:32px 32px 16px;"><p style="margin:0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.intro) + '</p></td></tr><tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:24px 32px 8px;"><p style="margin:0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">What you\'re actually getting</p></td></tr>' + cardRows + '<tr><td bgcolor="' + t.bg + '" style="height:8px;"></td></tr>' + mmQuote(d) + ps + mmUrgency(d) + mmCTA(d, ctaUrl) + mmFooter(sUrl);
   } else if (lid === 'minimal') {
-    rows = '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:48px 40px 40px;"><img src="' + LOGO + '" alt="Meat Merchant" width="110" style="display:block;margin:0 0 48px 0;' + (_theme==='cream'?'filter:brightness(0);':'') + '"><p style="margin:0 0 16px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;" data-ed contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0 0 24px 0;font-size:42px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.05;font-family:Impact,\'Arial Black\',sans-serif;" data-ed contenteditable="true">' + hlHtml(d) + '</h1><div style="height:3px;background:#af3630;width:40px;margin-bottom:28px;"></div><p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.intro) + '</p>' + (d.body1?'<p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.body1) + '</p>':'') + (d.urgency?'<p style="margin:20px 0 0 0;font-size:13px;font-weight:700;letter-spacing:1px;color:#af3630;text-transform:uppercase;" data-ed contenteditable="true">&#x26A1; ' + esc(d.urgency) + '</p>':'') + '</td></tr>' + hi + ps + mmCTA(d, ctaUrl) + mmFooter(sUrl);
+    rows = '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:48px 40px 40px;"><img src="' + LOGO + '" alt="Meat Merchant" width="110" style="display:block;margin:0 0 48px 0;' + (_theme==='cream'?'filter:brightness(0);':'') + '"><p style="margin:0 0 16px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;" data-ed contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0 0 24px 0;font-size:42px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.05;font-family:Impact,\'Arial Black\',sans-serif;" data-ed contenteditable="true">' + hlHtml(d) + '</h1><div style="height:3px;background:#af3630;width:40px;margin-bottom:28px;"></div><p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.intro) + '</p>' + (d.body1?'<p style="margin:0 0 16px 0;font-size:' + dv.fsBody + 'px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.body1) + '</p>':'') + (d.urgency?'<p style="margin:20px 0 0 0;font-size:13px;font-weight:700;letter-spacing:1px;color:#af3630;text-transform:uppercase;" data-ed contenteditable="true">&#x26A1; ' + esc(d.urgency) + '</p>':'') + '</td></tr>' + hi + ps + mmCTA(d, ctaUrl) + mmFooter(sUrl);
   } else if (lid === 'urgency') {
     var urgBox = d.urgency ? '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:0 32px 32px;text-align:center;"><table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;width:100%;max-width:440px;border:2px dashed #af3630;"><tr><td style="padding:24px 28px;text-align:center;"><p style="margin:0 0 8px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">Don\'t Miss Out</p><p style="margin:0 0 16px 0;font-size:15px;line-height:1.8;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.urgency) + '</p><table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr><td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + ctaUrl + '" style="display:inline-block;padding:14px 32px;font-size:13px;font-weight:700;letter-spacing:2px;color:#ffffff;text-decoration:none;text-transform:uppercase;">' + esc(d.ctaText) + ' &rarr;</a></td></tr></table></td></tr></table></td></tr>' : '';
     rows = mmHero(d) + hi + mmDiv() + '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:32px 32px 16px;"><p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.intro) + '</p>' + (d.body1?'<p style="margin:0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.body1) + '</p>':'') + '</td></tr>' + urgBox + ps + mmCTA(d, ctaUrl) + mmFooter(sUrl);
@@ -692,9 +740,9 @@ function buildExport() {
     var cols = x.prods.length <= 2 ? x.prods.length : x.prods.length <= 4 ? 2 : 3;
     var w = cols === 1 ? '100%' : cols === 2 ? '50%' : '33%';
     var cells = x.prods.map(function(p) {
-      return '<td width="' + w + '" style="vertical-align:top;padding:0 8px 16px;">' +
+      return '<td width="' + w + '" style="vertical-align:top;padding:0 8px ' + pp + 'px;">' +
         (p.img ? '<img src="' + p.img + '" alt="' + esc(p.name) + '" width="100%" style="display:block;border-radius:3px;margin-bottom:8px;max-height:140px;object-fit:cover;">' : '') +
-        '<p style="margin:0 0 4px 0;font-size:14px;font-weight:700;color:' + t.head + ';">' + esc(p.name) + '</p>' +
+        '<p style="margin:0 0 4px 0;font-size:' + dv.fsProdName + 'px;font-weight:700;color:' + t.head + ';">' + esc(p.name) + '</p>' +
         (p.desc ? '<p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:' + t.muted + ';">' + esc(p.desc) + '</p>' : '') +
         ((p.was && p.now) ? '<p style="margin:0 0 2px 0;font-size:12px;color:' + t.muted + ';text-decoration:line-through;">' + esc(p.was) + '</p><p style="margin:0 0 10px 0;font-size:15px;font-weight:700;color:#af3630;">' + esc(p.now) + '</p>' : (p.now ? '<p style="margin:0 0 10px 0;font-size:14px;font-weight:700;color:#af3630;">' + esc(p.now) + '</p>' : '')) +
         (p.link ? '<table cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + esc(p.link) + '" style="display:inline-block;padding:8px 16px;font-size:11px;font-weight:700;letter-spacing:1.5px;color:#ffffff;text-decoration:none;text-transform:uppercase;">Buy Now</a></td></tr></table>' : '') +
@@ -703,7 +751,7 @@ function buildExport() {
     prodRows = '<tr><td bgcolor="' + t.s2 + '" style="background-color:' + t.s2 + ';padding:8px 32px 4px 32px;"><p style="margin:0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">Featured Cuts</p></td></tr><tr><td bgcolor="' + t.s2 + '" style="background-color:' + t.s2 + ';padding:12px 24px 24px 24px;"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>' + cells + '</tr></table></td></tr>';
   }
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="color-scheme" content="light only">\n<meta name="supported-color-schemes" content="light">\n<meta name="viewport" content="width=device-width,initial-scale=1.0">\n<title>' + esc(subject) + '</title>\n</head>\n<body style="margin:0;padding:0;background-color:' + t.bg + ';font-family:Arial,Helvetica,sans-serif;">\n<div style="display:none;font-size:1px;line-height:1px;max-height:0;overflow:hidden;">' + esc(preview) + '&nbsp;&#8199;&#65279;&#847;</div>\n<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';">\n<tr><td align="center" style="padding:20px 10px;">\n<table width="580" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;width:100%;">\n\n<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:40px 32px 32px 32px;"><img src="' + LOGO + '" alt="Meat Merchant" width="130" style="display:block;margin:0 0 36px 0;"><p style="margin:0 0 12px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">' + esc(d.label) + '</p><h1 style="margin:0;font-size:46px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.0;font-family:Impact,\'Arial Black\',sans-serif;">' + esc(d.headline).replace(esc(d.headlineRed || '\x00'), '<span style="color:#af3630;">' + esc(d.headlineRed || '') + '</span>') + '</h1></td></tr>\n\n' + heroRow + '\n\n<tr><td bgcolor="#af3630" style="background-color:#af3630;height:4px;font-size:0;line-height:0;">&nbsp;</td></tr>\n\n<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:32px 32px 28px 32px;"><p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.intro) + '</p>' + (d.body1 ? '<p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.body1) + '</p>' : '') + (d.body2 ? '<p style="margin:0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.body2) + '</p>' : '') + '</td></tr>\n\n' + prodRows + '\n\n' + (d.urgency ? '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:14px 32px;text-align:center;"><p style="margin:0;font-size:13px;font-weight:700;letter-spacing:1px;color:#af3630;text-transform:uppercase;">&#x26A1; ' + esc(d.urgency) + '</p></td></tr>\n\n' : '') + (d.quoteText ? '<tr><td bgcolor="#af3630" style="background-color:#af3630;padding:28px 32px;"><p style="margin:0 0 10px 0;font-size:11px;font-weight:700;letter-spacing:2px;color:#ffffff;text-transform:uppercase;">&#x1F525; Matt The Butcher Says</p><p style="margin:0;font-size:15px;line-height:1.8;color:#ffffff;font-style:italic;">&ldquo;' + esc(d.quoteText) + '&rdquo;</p></td></tr>\n\n' : '') + '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:36px 32px;text-align:center;"><h2 style="margin:0 0 10px 0;font-size:32px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.1;font-family:Impact,\'Arial Black\',sans-serif;">' + esc(d.ctaHeadline) + '</h2><p style="margin:0 0 28px 0;font-size:14px;color:' + t.muted + ';">' + esc(d.ctaSubtext) + '</p><table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr><td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + esc(x.ctaUrl) + '" style="display:inline-block;padding:18px 44px;font-size:13px;font-weight:700;letter-spacing:2px;color:#ffffff;text-decoration:none;text-transform:uppercase;">' + esc(d.ctaText) + ' &rarr;</a></td></tr></table>' + (d.signoff ? '<p style="margin:16px 0 0 0;font-size:13px;color:' + t.dim + ';">' + esc(d.signoff) + '</p>' : '') + (d.ps ? '<p style="margin:12px 0 0 0;font-size:13px;color:#af3630;font-weight:600;"><strong>P.S.</strong> ' + esc(d.ps) + '</p>' : '') + '</td></tr>\n\n<tr><td bgcolor="#111111" style="background-color:#111111;padding:24px 32px;text-align:center;"><img src="' + LOGO + '" alt="Meat Merchant" width="100" style="display:block;margin:0 auto 14px auto;"><p style="margin:0 0 6px 0;font-size:12px;color:#555555;">' + ADDR + '</p><p style="margin:0 0 12px 0;font-size:12px;color:#444444;">You&rsquo;re receiving this as part of the Meat Merchant family.</p><p style="margin:0;font-size:12px;"><a href="{% unsubscribe %}" style="color:#af3630;text-decoration:none;">Unsubscribe</a> &nbsp;&middot;&nbsp; <a href="' + esc(x.sUrl) + '/policies/privacy-policy" style="color:#af3630;text-decoration:none;">Privacy Policy</a></p></td></tr>\n\n</table>\n</td></tr>\n</table>\n</body>\n</html>';
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="color-scheme" content="light only">\n<meta name="supported-color-schemes" content="light">\n<meta name="viewport" content="width=device-width,initial-scale=1.0">\n<title>' + esc(subject) + '</title>\n</head>\n<body style="margin:0;padding:0;background-color:' + t.bg + ';font-family:Arial,Helvetica,sans-serif;">\n<div style="display:none;font-size:1px;line-height:1px;max-height:0;overflow:hidden;">' + esc(preview) + '&nbsp;&#8199;&#65279;&#847;</div>\n<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';">\n<tr><td align="center" style="padding:20px 10px;">\n<table width="580" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;width:100%;">\n\n<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:40px 32px 32px 32px;"><img src="' + LOGO + '" alt="Meat Merchant" width="130" style="display:block;margin:0 0 36px 0;"><p style="margin:0 0 12px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">' + esc(d.label) + '</p><h1 style="margin:0;font-size:' + dv.fsHeadline + 'px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.0;font-family:Impact,\'Arial Black\',sans-serif;">' + esc(d.headline).replace(esc(d.headlineRed || '\x00'), '<span style="color:#af3630;">' + esc(d.headlineRed || '') + '</span>') + '</h1></td></tr>\n\n' + heroRow + '\n\n<tr><td bgcolor="#af3630" style="background-color:#af3630;height:4px;font-size:0;line-height:0;">&nbsp;</td></tr>\n\n<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:32px 32px 28px 32px;"><p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.intro) + '</p>' + (d.body1 ? '<p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.body1) + '</p>' : '') + (d.body2 ? '<p style="margin:0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.body2) + '</p>' : '') + '</td></tr>\n\n' + prodRows + '\n\n' + (d.urgency ? '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:14px 32px;text-align:center;"><p style="margin:0;font-size:13px;font-weight:700;letter-spacing:1px;color:#af3630;text-transform:uppercase;">&#x26A1; ' + esc(d.urgency) + '</p></td></tr>\n\n' : '') + (d.quoteText ? '<tr><td bgcolor="#af3630" style="background-color:#af3630;padding:28px 32px;"><p style="margin:0 0 10px 0;font-size:11px;font-weight:700;letter-spacing:2px;color:#ffffff;text-transform:uppercase;">&#x1F525; Matt The Butcher Says</p><p style="margin:0;font-size:15px;line-height:1.8;color:#ffffff;font-style:italic;">&ldquo;' + esc(d.quoteText) + '&rdquo;</p></td></tr>\n\n' : '') + '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:36px 32px;text-align:center;"><h2 style="margin:0 0 10px 0;font-size:32px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.1;font-family:Impact,\'Arial Black\',sans-serif;">' + esc(d.ctaHeadline) + '</h2><p style="margin:0 0 28px 0;font-size:14px;color:' + t.muted + ';">' + esc(d.ctaSubtext) + '</p><table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr><td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + esc(x.ctaUrl) + '" style="display:inline-block;padding:18px 44px;font-size:13px;font-weight:700;letter-spacing:2px;color:#ffffff;text-decoration:none;text-transform:uppercase;">' + esc(d.ctaText) + ' &rarr;</a></td></tr></table>' + (d.signoff ? '<p style="margin:16px 0 0 0;font-size:13px;color:' + t.dim + ';">' + esc(d.signoff) + '</p>' : '') + (d.ps ? '<p style="margin:12px 0 0 0;font-size:13px;color:#af3630;font-weight:600;"><strong>P.S.</strong> ' + esc(d.ps) + '</p>' : '') + '</td></tr>\n\n<tr><td bgcolor="#111111" style="background-color:#111111;padding:24px 32px;text-align:center;"><img src="' + LOGO + '" alt="Meat Merchant" width="100" style="display:block;margin:0 auto 14px auto;"><p style="margin:0 0 6px 0;font-size:12px;color:#555555;">' + ADDR + '</p><p style="margin:0 0 12px 0;font-size:12px;color:#444444;">You&rsquo;re receiving this as part of the Meat Merchant family.</p><p style="margin:0;font-size:12px;"><a href="{% unsubscribe %}" style="color:#af3630;text-decoration:none;">Unsubscribe</a> &nbsp;&middot;&nbsp; <a href="' + esc(x.sUrl) + '/policies/privacy-policy" style="color:#af3630;text-decoration:none;">Privacy Policy</a></p></td></tr>\n\n</table>\n</td></tr>\n</table>\n</body>\n</html>';
 }
 
 // ── MODALS ────────────────────────────────────────────────────
@@ -764,6 +812,89 @@ function updateThemeBtns() {
   if (bd) bd.style.borderColor = _theme === 'dark' ? '#af3630' : '#363636';
   if (bc) bc.style.borderColor = _theme === 'cream' ? '#af3630' : '#363636';
 }
+
+
+// ── DESIGN CONTROLS ──────────────────────────────────────────
+var _designOpen = false;
+
+function toggleDesign() {
+  _designOpen = !_designOpen;
+  var panel = document.getElementById('designPanel');
+  var btn = document.getElementById('designToggle');
+  if (panel) panel.style.display = _designOpen ? 'block' : 'none';
+  if (btn) btn.innerHTML = _designOpen ? '&#9660; Design Controls' : '&#9650; Design Controls';
+}
+
+function showDesignControls() {
+  document.getElementById('designToggle').style.display = 'block';
+  populateDesignPanel();
+}
+
+function populateDesignPanel() {
+  if (!emailData) return;
+  var d = emailData;
+  var fields = {
+    etLabel: d.label, etHeadline: d.headline, etRed: d.headlineRed,
+    etSubhead: d.subhead, etIntro: d.intro, etBody1: d.body1, etBody2: d.body2,
+    etUrgency: d.urgency, etQuote: d.quoteText, etCTAHead: d.ctaHeadline,
+    etCTASub: d.ctaSubtext, etCTABtn: d.ctaText, etSignoff: d.signoff, etPS: d.ps
+  };
+  Object.keys(fields).forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el && fields[id]) el.value = fields[id];
+  });
+}
+
+function getDesignVal(id, def) {
+  var el = document.getElementById(id);
+  return el ? parseInt(el.value) || def : def;
+}
+function getTextVal(id, fallback) {
+  var el = document.getElementById(id);
+  return (el && el.value.trim()) ? el.value.trim() : (fallback || '');
+}
+function updateLabel(id) {
+  var el = document.getElementById(id);
+  var valEl = document.getElementById(id + 'V');
+  if (el && valEl) valEl.textContent = el.value;
+}
+
+// Expose design values globally so buildPreview can use them
+function getDesign() {
+  ['padHero','padCopy','padProds','padCTA','padFooter',
+   'fsHeadline','fsSubhead','fsBody','fsCTAHead','fsCTABtn','fsProdName','fsLabel'].forEach(updateLabel);
+  return {
+    padHero:    getDesignVal('padHero', 40),
+    padCopy:    getDesignVal('padCopy', 32),
+    padProds:   getDesignVal('padProds', 24),
+    padCTA:     getDesignVal('padCTA', 36),
+    padFooter:  getDesignVal('padFooter', 24),
+    fsHeadline: getDesignVal('fsHeadline', 46),
+    fsSubhead:  getDesignVal('fsSubhead', 16),
+    fsBody:     getDesignVal('fsBody', 15),
+    fsCTAHead:  getDesignVal('fsCTAHead', 32),
+    fsCTABtn:   getDesignVal('fsCTABtn', 13),
+    fsProdName: getDesignVal('fsProdName', 14),
+    fsLabel:    getDesignVal('fsLabel', 12),
+  };
+}
+
+function applyDesign() {
+  if (!emailData) return;
+  // Merge text edits back into emailData
+  var textFields = {
+    label:'etLabel', headline:'etHeadline', headlineRed:'etRed', subhead:'etSubhead',
+    intro:'etIntro', body1:'etBody1', body2:'etBody2', urgency:'etUrgency',
+    quoteText:'etQuote', ctaHeadline:'etCTAHead', ctaSubtext:'etCTASub',
+    ctaText:'etCTABtn', signoff:'etSignoff', ps:'etPS'
+  };
+  Object.keys(textFields).forEach(function(key) {
+    var el = document.getElementById(textFields[key]);
+    if (el && el.value.trim()) emailData[key] = el.value.trim();
+  });
+  renderPreview();
+}
+
 
 // ── UTILS ─────────────────────────────────────────────────────
 function toast(msg, ok) {
