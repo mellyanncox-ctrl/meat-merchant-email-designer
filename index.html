@@ -816,108 +816,25 @@ function makeResizable(container) {
 // ── BUILD EXPORT HTML ─────────────────────────────────────────
 function buildExport() {
   if (!emailData) return '';
-  var dv = getDesign();
-  var pp = dv.padProds || 24;
-  var d = emailData;
-  var x = Object.assign({}, d._x);
-  x.hImg = (x.hImg && x.hImg.startsWith('data:')) ? '' : (x.hImg || '');
-  x.prods = (x.prods || []).map(function(p) {
-    return Object.assign({}, p, { img: (p.img && p.img.startsWith('data:')) ? '' : (p.img || '') });
-  });
+  // Build from the current layout preview — same structure the user sees
+  // Strip contenteditable and data-ed attributes for clean Klaviyo HTML
+  var previewHtml = buildPreview(curLayout, emailData);
+
+  // Remove tool UI wrapper (the grey background div)
+  previewHtml = previewHtml.replace(/^<div style="background:#[^"]+;padding:[^"]+">\s*/, '');
+  previewHtml = previewHtml.replace(/\s*<\/div>\s*$/, '');
+
+  // Strip all contenteditable and data-ed attributes
+  previewHtml = previewHtml.replace(/ contenteditable="true"/g, '');
+  previewHtml = previewHtml.replace(/ data-ed/g, '');
+  previewHtml = previewHtml.replace(/ data-field="[^"]*"/g, '');
+
+  // Fix image resize wrappers — replace .img-wrap divs with plain img tags
+  previewHtml = previewHtml.replace(/<div class="img-wrap"[^>]*><div class="img-inner"[^>]*>(<img[^>]+>)<\/div><[^>]+><[^>]+><[^>]+><\/div>/g, '$1');
+
+  var subject = (document.getElementById('outSub') ? document.getElementById('outSub').innerText.trim() : emailData.subject) || emailData.subject;
+  var preview = (document.getElementById('outPrev') ? document.getElementById('outPrev').innerText.trim() : emailData.preview) || emailData.preview;
   var t = tc();
-  var subject = (document.getElementById('outSub') ? document.getElementById('outSub').innerText.trim() : d.subject) || d.subject;
-  var preview = (document.getElementById('outPrev') ? document.getElementById('outPrev').innerText.trim() : d.preview) || d.preview;
-  var prodTitle = (document.getElementById('prodSectionTitle') ? document.getElementById('prodSectionTitle').value.trim() || 'Featured Cuts' : 'Featured Cuts');
-  var IMPACT = "Impact,'Arial Black',sans-serif";
-
-  var heroRow = '';
-  if (bv('heroImg') && x.hImg) {
-    heroRow = '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:0 32px;font-size:0;line-height:0;"><img src="' + x.hImg + '" alt="" width="516" style="display:block;width:100%;max-width:516px;"></td></tr>';
-  }
-
-  var prodRows = '';
-  if (bv('products') && x.prods && x.prods.length) {
-    var prodRowsHtml = '';
-    for (var ri = 0; ri < x.prods.length; ri += 2) {
-      var rowProds = x.prods.slice(ri, ri + 2);
-      var rowW = rowProds.length === 1 ? '100%' : '48%';
-      var rowCells = rowProds.map(function(p) {
-        return '<td width="' + rowW + '" style="vertical-align:top;padding:0 10px ' + pp + 'px;">' +
-          (p.img ? '<img src="' + p.img + '" alt="' + esc(p.name) + '" width="100%" style="display:block;border-radius:3px;margin-bottom:20px;max-height:160px;object-fit:cover;">' : '') +
-          '<p style="margin:16px 0 4px 0;font-size:' + dv.fsProdName + 'px;font-weight:700;color:' + t.head + ';">' + esc(p.name) + '</p>' +
-          (p.desc ? '<p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:' + t.muted + ';">' + esc(p.desc) + '</p>' : '') +
-          ((p.was && p.now) ?
-            '<table cellpadding="0" cellspacing="0" border="0" style="margin:0 0 10px 0;"><tr>' +
-            '<td style="padding-right:12px;"><span style="font-size:10px;font-weight:700;letter-spacing:2px;color:' + t.muted + ';text-transform:uppercase;">WAS</span><br><span style="font-size:13px;color:' + t.muted + ';text-decoration:line-through;">' + esc(p.was) + '</span></td>' +
-            '<td><span style="font-size:10px;font-weight:700;letter-spacing:2px;color:#af3630;text-transform:uppercase;">NOW</span><br><span style="font-size:15px;font-weight:700;color:#af3630;">' + esc(p.now) + '</span></td>' +
-            '</tr></table>' :
-            ((p.now || p.was) ? '<p style="margin:0 0 10px 0;font-size:14px;font-weight:700;color:#af3630;">' + esc(p.now || p.was) + '</p>' : '')) +
-          (p.link ? '<table cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + esc(p.link) + '" style="display:inline-block;padding:8px 16px;font-size:11px;font-weight:700;letter-spacing:1.5px;color:#ffffff;text-decoration:none;text-transform:uppercase;">Buy Now</a></td></tr></table>' : '') +
-          '</td>';
-      }).join('');
-      if (rowProds.length === 1 && x.prods.length > 1) rowCells += '<td width="48%"></td>';
-      prodRowsHtml += '<tr style="vertical-align:top">' + rowCells + '</tr>' +
-        '<tr><td colspan="2" style="height:20px;font-size:0;line-height:0;">&nbsp;</td></tr>';
-    }
-    prodRows =
-      '<tr><td bgcolor="' + t.s2 + '" style="background-color:' + t.s2 + ';padding:8px 32px 4px 32px;">' +
-      '<p style="margin:0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">' + esc(prodTitle) + '</p></td></tr>' +
-      '<tr><td bgcolor="' + t.s2 + '" style="background-color:' + t.s2 + ';padding:12px 24px 8px 24px;">' +
-      '<table width="100%" cellpadding="0" cellspacing="0" border="0">' + prodRowsHtml + '</table></td></tr>';
-  }
-
-  var redWord = d.headlineRed || '';
-  var headlineHtml = redWord ? esc(d.headline).replace(esc(redWord), '<span style="color:#af3630;">' + esc(redWord) + '</span>') : esc(d.headline);
-
-  var parts = [];
-  if (bv('hero')) parts.push(
-    '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:40px 32px 32px 32px;">' +
-    '<img src="' + LOGO + '" alt="Meat Merchant" width="130" style="display:block;margin:0 0 36px 0;">' +
-    '<p style="margin:0 0 12px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">' + esc(d.label) + '</p>' +
-    '<h1 style="margin:0;font-size:' + dv.fsHeadline + 'px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.0;font-family:' + IMPACT + ';">' + headlineHtml + '</h1>' +
-    '</td></tr>'
-  );
-  if (heroRow) parts.push(heroRow);
-  if (bv('divider')) parts.push('<tr><td bgcolor="#af3630" style="background-color:#af3630;height:4px;font-size:0;line-height:0;">&nbsp;</td></tr>');
-  if (bv('copy')) parts.push(
-    '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:32px 32px 28px 32px;">' +
-    '<p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.intro) + '</p>' +
-    (d.body1 ? '<p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.body1) + '</p>' : '') +
-    (d.body2 ? '<p style="margin:0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.body2) + '</p>' : '') +
-    '</td></tr>'
-  );
-  if (prodRows) parts.push(prodRows);
-  if (bv('urgency') && d.urgency) parts.push(
-    '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:14px 32px;text-align:center;">' +
-    '<p style="margin:0;font-size:13px;font-weight:700;letter-spacing:1px;color:#af3630;text-transform:uppercase;">&#x26A1; ' + esc(d.urgency) + '</p></td></tr>'
-  );
-  if (bv('quote') && d.quoteText) parts.push(
-    '<tr><td bgcolor="#af3630" style="background-color:#af3630;padding:28px 32px;">' +
-    '<p style="margin:0 0 10px 0;font-size:11px;font-weight:700;letter-spacing:2px;color:#ffffff;text-transform:uppercase;">&#x1F525; Matt The Butcher Says</p>' +
-    '<p style="margin:0;font-size:15px;line-height:1.8;color:#ffffff;font-style:italic;">&ldquo;' + esc(d.quoteText) + '&rdquo;</p></td></tr>'
-  );
-  if (bv('cta')) parts.push(
-    '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:36px 32px;text-align:center;">' +
-    '<h2 style="margin:0 0 10px 0;font-size:32px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.1;font-family:' + IMPACT + ';">' + esc(d.ctaHeadline) + '</h2>' +
-    '<p style="margin:0 0 28px 0;font-size:14px;color:' + t.muted + ';">' + esc(d.ctaSubtext) + '</p>' +
-    '<table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr>' +
-    '<td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + esc(x.ctaUrl) + '" style="display:inline-block;padding:18px 44px;font-size:13px;font-weight:700;letter-spacing:2px;color:#ffffff;text-decoration:none;text-transform:uppercase;">' + esc(d.ctaText) + ' &rarr;</a></td>' +
-    '</tr></table>' +
-    (d.signoff ? '<p style="margin:16px 0 0 0;font-size:13px;color:' + t.dim + ';">' + esc(d.signoff) + '</p>' : '') +
-    (d.ps ? '<p style="margin:12px 0 0 0;font-size:13px;color:#af3630;font-weight:600;"><strong>P.S.</strong> ' + esc(d.ps) + '</p>' : '') +
-    '</td></tr>'
-  );
-  if (bv('footer')) parts.push(
-    '<tr><td bgcolor="#111111" style="background-color:#111111;padding:24px 32px;text-align:center;">' +
-    '<img src="' + LOGO + '" alt="Meat Merchant" width="100" style="display:block;margin:0 auto 14px auto;">' +
-    '<p style="margin:0 0 6px 0;font-size:12px;color:#555555;">' + ADDR + '</p>' +
-    '<p style="margin:0 0 12px 0;font-size:12px;color:#444444;">You&rsquo;re receiving this as part of the Meat Merchant family.</p>' +
-    '<p style="margin:0;font-size:12px;">' +
-    '<a href="{% unsubscribe %}" style="color:#af3630;text-decoration:none;">Unsubscribe</a>' +
-    ' &nbsp;&middot;&nbsp; ' +
-    '<a href="' + esc(x.sUrl) + '/policies/privacy-policy" style="color:#af3630;text-decoration:none;">Privacy Policy</a>' +
-    '</p></td></tr>'
-  );
 
   return '<!DOCTYPE html>\n' +
     '<html lang="en">\n<head>\n' +
@@ -929,11 +846,8 @@ function buildExport() {
     '</head>\n' +
     '<body style="margin:0;padding:0;background-color:' + t.bg + ';font-family:Arial,Helvetica,sans-serif;">\n' +
     '<div style="display:none;font-size:1px;line-height:1px;max-height:0;overflow:hidden;">' + esc(preview) + '&nbsp;&#8199;&#65279;&#847;</div>\n' +
-    '<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';">\n' +
-    '<tr><td align="center" style="padding:20px 10px;">\n' +
-    '<table width="580" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;width:100%;">\n\n' +
-    parts.join('\n\n') +
-    '\n\n</table>\n</td></tr>\n</table>\n</body>\n</html>';
+    previewHtml +
+    '\n</body>\n</html>';
 }
 
 
