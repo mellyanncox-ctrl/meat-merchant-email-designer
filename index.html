@@ -208,13 +208,12 @@ textarea{min-height:64px;line-height:1.5}
 
     <div>
       <div class="sec-lbl">Hero Image</div>
-      <div class="iz" id="hZone">
-        <input type="file" accept="image/*" id="hFile">
-        <div class="iz-lbl"><strong>Drop or click to upload</strong>Hero / banner image</div>
-        <img class="iz-prev" id="hPrev" src="" alt="">
+      <div class="fg">
+        <label>Image URL</label>
+        <input type="url" id="hUrl" placeholder="Paste Shopify or Klaviyo image URL…">
       </div>
-      <div style="margin-top:5px">
-        <input type="url" id="hUrl" placeholder="Or paste image URL…">
+      <div id="hPreviewWrap" style="margin-top:6px;display:none">
+        <img id="hPrev" src="" alt="" style="width:100%;max-height:80px;object-fit:cover;border-radius:5px;border:1px solid var(--bd2)">
       </div>
     </div>
 
@@ -389,15 +388,32 @@ function upUrl(zid, pid, url) {
   if (zone) zone.classList.add('on');
 }
 
-function gi(zid) { return imgs[zid] || ''; }
+function gi(zid) {
+  // Also check the url input directly in case imgs cache is stale
+  if (imgs[zid]) return imgs[zid];
+  // For product zones pz1..pz6, check pimgurl1..pimgurl6
+  var match = zid.match(/^pz(\d+)$/);
+  if (match) {
+    var urlEl = document.getElementById('pimgurl' + match[1]);
+    if (urlEl && urlEl.value.trim()) return urlEl.value.trim();
+  }
+  // For hero
+  if (zid === 'hZone') {
+    var hEl = document.getElementById('hUrl');
+    if (hEl && hEl.value.trim()) return hEl.value.trim();
+  }
+  return '';
+}
 function gv(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
 
 // Wire up hero image zone
-document.getElementById('hFile').addEventListener('change', function() {
-  upFile(this, 'hZone', 'hPrev');
-});
 document.getElementById('hUrl').addEventListener('input', function() {
-  upUrl('hZone', 'hPrev', this.value.trim());
+  var url = this.value.trim();
+  imgs['hZone'] = url;
+  var prev = document.getElementById('hPrev');
+  var wrap = document.getElementById('hPreviewWrap');
+  if (url) { prev.src = url; wrap.style.display = 'block'; }
+  else { prev.src = ''; wrap.style.display = 'none'; }
 });
 
 // ── PRODUCTS ─────────────────────────────────────────────────
@@ -428,29 +444,38 @@ function addProd() {
   hdr.appendChild(rmBtn);
   div.appendChild(hdr);
 
-  // Image zone
-  var zone = document.createElement('div');
-  zone.className = 'iz';
-  zone.id = zid;
-  zone.style.cssText = 'padding:8px;min-height:44px';
-  var fileInput = document.createElement('input');
-  fileInput.type = 'file';
-  fileInput.accept = 'image/*';
-  fileInput.addEventListener('change', (function(zoneId, previewId) {
-    return function() { upFile(this, zoneId, previewId); };
-  })(zid, pid));
-  var lbl = document.createElement('div');
-  lbl.className = 'iz-lbl';
-  lbl.innerHTML = '<strong>Upload image</strong>';
+  // Image URL input + preview
+  var imgLabel = document.createElement('label');
+  imgLabel.style.cssText = 'font-size:10px;font-weight:600;color:var(--txt2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:3px;display:block';
+  imgLabel.textContent = 'Image URL';
+  div.appendChild(imgLabel);
+
+  var imgUrlInput = document.createElement('input');
+  imgUrlInput.type = 'url';
+  imgUrlInput.id = 'pimgurl' + i;
+  imgUrlInput.placeholder = 'Paste Shopify or Klaviyo image URL…';
+  imgUrlInput.addEventListener('input', (function(zoneId, previewId, wrapId) {
+    return function() {
+      var url = this.value.trim();
+      imgs[zoneId] = url;
+      var prev = document.getElementById(previewId);
+      var wrap = document.getElementById(wrapId);
+      if (url && prev && wrap) { prev.src = url; wrap.style.display = 'block'; }
+      else if (wrap) { wrap.style.display = 'none'; }
+    };
+  })(zid, pid, 'pwrap'+i));
+  div.appendChild(imgUrlInput);
+
+  var imgWrap = document.createElement('div');
+  imgWrap.id = 'pwrap' + i;
+  imgWrap.style.cssText = 'margin-top:5px;display:none';
   var preview = document.createElement('img');
-  preview.className = 'iz-prev';
   preview.id = pid;
   preview.src = '';
   preview.alt = '';
-  zone.appendChild(fileInput);
-  zone.appendChild(lbl);
-  zone.appendChild(preview);
-  div.appendChild(zone);
+  preview.style.cssText = 'width:100%;max-height:80px;object-fit:cover;border-radius:4px;border:1px solid var(--bd2)';
+  imgWrap.appendChild(preview);
+  div.appendChild(imgWrap);
 
   // Name field
   var nameInput = document.createElement('input');
