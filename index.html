@@ -98,6 +98,16 @@ textarea{min-height:64px;line-height:1.5}
 [data-ed]:focus{background:rgba(175,54,48,.18);outline:1px solid #af3630;border-radius:2px}
 
 
+
+/* block visibility toggles */
+.block-row{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;cursor:pointer;transition:all .15s;user-select:none}
+.block-row:hover{border-color:var(--bd2)}
+.block-row.off{opacity:.45}
+.block-label{font-size:11px;font-weight:500;color:var(--txt2);display:flex;align-items:center;gap:7px}
+.block-label .drag-handle{color:var(--txt3);font-size:12px;cursor:grab}
+.block-eye{font-size:13px;color:var(--red);transition:all .15s}
+.block-row.off .block-eye{color:var(--txt3)}
+
 /* subject/preview alternatives */
 .alt-row{display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap}
 .alt-chip{background:var(--s2);border:1px solid var(--bd2);color:var(--txt2);font-size:10px;font-family:var(--ff);padding:4px 9px;border-radius:12px;cursor:pointer;transition:all .15s;line-height:1.4;text-align:left;max-width:100%}
@@ -639,7 +649,7 @@ function mmFooter(sUrl) {
   var dv = getDesign(); var fp = dv.padFooter;
   return '<tr><td bgcolor="#111111" style="background-color:#111111;padding:' + fp + 'px 32px;text-align:center;"><img src="' + LOGO + '" alt="Meat Merchant" width="100" style="display:block;margin:0 auto 14px auto;"><p style="margin:0 0 6px 0;font-size:12px;color:#555555;">' + ADDR + '</p><p style="margin:0 0 12px 0;font-size:12px;color:#444444;">You&rsquo;re receiving this as part of the Meat Merchant family.</p><p style="margin:0;font-size:12px;"><a href="{% unsubscribe %}" style="color:#af3630;text-decoration:none;">Unsubscribe</a> &nbsp;&middot;&nbsp; <a href="' + sUrl + '/policies/privacy-policy" style="color:#af3630;text-decoration:none;">Privacy Policy</a></p></td></tr>';
 }
-function mmDiv() { return '<tr><td bgcolor="#af3630" style="background-color:#af3630;height:4px;font-size:0;line-height:0;">&nbsp;</td></tr>'; }
+function mmDiv() { return bv('divider') ? '<tr><td bgcolor="#af3630" style="background-color:#af3630;height:4px;font-size:0;line-height:0;">&nbsp;</td></tr>' : ''; }
 function mmHero(d) {
   var t = tc(); var dv = getDesign();
   var p = dv.padHero;
@@ -711,23 +721,23 @@ function buildPreview(lid, d) {
   if (lid === 'classic') {
     rows = getBlockRows(d, hImg, prods, ctaUrl, sUrl);
   } else if (lid === 'bold') {
-    rows = '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:36px 32px 20px;"><img src="' + LOGO + '" alt="Meat Merchant" width="130" style="display:block;margin:0 0 24px 0;' + (_theme==='cream'?'filter:brightness(0);':'') + '"></td></tr>' + hi + '<tr><td bgcolor="' + t.footer + '" style="background-color:' + t.footer + ';padding:28px 32px 24px;"><p style="margin:0 0 10px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;" data-ed data-field="label" contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0 0 12px 0;font-size:54px;font-weight:900;color:#ffffff;text-transform:uppercase;line-height:.95;font-family:Impact,\'Arial Black\',sans-serif;" data-ed data-field="headline" contenteditable="true">' + hlHtml(d) + '</h1><p style="margin:0;font-size:16px;color:#af3630;font-weight:700;" data-ed data-field="subhead" contenteditable="true">' + esc(d.subhead) + '</p></td></tr>' + mmDiv() + mmCopy(d) + ps + mmUrgency(d) + mmCTA(d, ctaUrl) + mmFooter(sUrl);
+    rows = '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:36px 32px 20px;"><img src="' + LOGO + '" alt="Meat Merchant" width="130" style="display:block;margin:0 0 24px 0;' + (_theme==='cream'?'filter:brightness(0);':'') + '"></td></tr>' + hi + '<tr><td bgcolor="' + t.footer + '" style="background-color:' + t.footer + ';padding:28px 32px 24px;"><p style="margin:0 0 10px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;" data-ed data-field="label" contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0 0 12px 0;font-size:54px;font-weight:900;color:#ffffff;text-transform:uppercase;line-height:.95;font-family:Impact,\'Arial Black\',sans-serif;" data-ed data-field="headline" contenteditable="true">' + hlHtml(d) + '</h1><p style="margin:0;font-size:16px;color:#af3630;font-weight:700;" data-ed data-field="subhead" contenteditable="true">' + esc(d.subhead) + '</p></td></tr>' + mmDiv() + (bv('copy')?mmCopy(d):'') + ps + (bv('urgency')?mmUrgency(d):'') + (bv('cta')?mmCTA(d, ctaUrl):'') + (bv('footer')?mmFooter(sUrl):'');
   } else if (lid === 'redlead') {
-    rows = '<tr><td bgcolor="#af3630" style="background-color:#af3630;padding:32px 32px 28px;"><img src="' + LOGO + '" alt="Meat Merchant" width="130" style="display:block;margin:0 0 24px 0;filter:brightness(0) invert(1);"><p style="margin:0 0 10px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,.7);text-transform:uppercase;" data-ed data-field="label" contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0;font-size:46px;font-weight:900;color:#ffffff;text-transform:uppercase;line-height:1.0;font-family:Impact,\'Arial Black\',sans-serif;" data-ed contenteditable="true">' + esc(d.headline) + '</h1></td></tr>' + hi + mmCopy(d) + ps + mmUrgency(d) + mmQuote(d) + mmCTA(d, ctaUrl) + mmFooter(sUrl);
+    rows = '<tr><td bgcolor="#af3630" style="background-color:#af3630;padding:32px 32px 28px;"><img src="' + LOGO + '" alt="Meat Merchant" width="130" style="display:block;margin:0 0 24px 0;filter:brightness(0) invert(1);"><p style="margin:0 0 10px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,.7);text-transform:uppercase;" data-ed data-field="label" contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0;font-size:46px;font-weight:900;color:#ffffff;text-transform:uppercase;line-height:1.0;font-family:Impact,\'Arial Black\',sans-serif;" data-ed contenteditable="true">' + esc(d.headline) + '</h1></td></tr>' + hi + mmCopy(d) + ps + mmUrgency(d) + (bv('quote')?mmQuote(d):'') + (bv('cta')?mmCTA(d, ctaUrl):'') + (bv('footer')?mmFooter(sUrl):'');
   } else if (lid === 'quote') {
-    rows = mmHero(d) + hi + mmDiv() + mmCopy(d) + mmQuote(d) + ps + mmUrgency(d) + mmCTA(d, ctaUrl) + mmFooter(sUrl);
+    rows = (bv('hero')?mmHero(d):'') + (bv('heroImg')?hi:'') + mmDiv() + (bv('copy')?mmCopy(d):'') + (bv('quote')?mmQuote(d):'') + (bv('products')?ps:'') + (bv('urgency')?mmUrgency(d):'') + (bv('cta')?mmCTA(d, ctaUrl):'') + (bv('footer')?mmFooter(sUrl):'');
   } else if (lid === 'cards') {
     var cardData = [{t:'Grass-Fed. Not Grain-Fed.',b:'Open pasture, natural diet, no feedlots. Tastes like beef should.'},{t:'Hand-Cut The Morning It Ships.',b:'Every order cut fresh on dispatch day. Not portioned weeks ago.'},{t:'No Hormones. No Shortcuts.',b:'What goes into the animal goes into you. Ours is clean, every time.'}];
     var cardRows = cardData.map(function(c){return '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:8px 32px 0;"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="' + t.card + '" style="background-color:' + t.card + ';padding:20px 22px;border-left:3px solid #af3630;"><p style="margin:0 0 5px 0;font-size:14px;font-weight:700;color:' + t.head + ';">' + c.t + '</p><p style="margin:0;font-size:13px;line-height:1.7;color:' + t.muted + ';">' + c.b + '</p></td></tr></table></td></tr>';}).join('');
-    rows = mmHero(d) + hi + mmDiv() + '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:32px 32px 16px;"><p style="margin:0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed data-field="intro" contenteditable="true">' + esc(d.intro) + '</p></td></tr><tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:24px 32px 8px;"><p style="margin:0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">What you\'re actually getting</p></td></tr>' + cardRows + '<tr><td bgcolor="' + t.bg + '" style="height:8px;"></td></tr>' + mmQuote(d) + ps + mmUrgency(d) + mmCTA(d, ctaUrl) + mmFooter(sUrl);
+    rows = (bv('hero')?mmHero(d):'') + (bv('heroImg')?hi:'') + mmDiv() + '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:32px 32px 16px;"><p style="margin:0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed data-field="intro" contenteditable="true">' + esc(d.intro) + '</p></td></tr><tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:24px 32px 8px;"><p style="margin:0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">What you\'re actually getting</p></td></tr>' + cardRows + '<tr><td bgcolor="' + t.bg + '" style="height:8px;"></td></tr>' + (bv('quote')?mmQuote(d):'') + (bv('products')?ps:'') + (bv('urgency')?mmUrgency(d):'') + (bv('cta')?mmCTA(d, ctaUrl):'') + (bv('footer')?mmFooter(sUrl):'');
   } else if (lid === 'minimal') {
-    rows = '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:48px 40px 40px;"><img src="' + LOGO + '" alt="Meat Merchant" width="110" style="display:block;margin:0 0 48px 0;' + (_theme==='cream'?'filter:brightness(0);':'') + '"><p style="margin:0 0 16px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;" data-ed data-field="label" contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0 0 24px 0;font-size:42px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.05;font-family:Impact,\'Arial Black\',sans-serif;" data-ed data-field="headline" contenteditable="true">' + hlHtml(d) + '</h1><div style="height:3px;background:#af3630;width:40px;margin-bottom:28px;"></div><p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed data-field="intro" contenteditable="true">' + esc(d.intro) + '</p>' + (d.body1?'<p style="margin:0 0 16px 0;font-size:' + dv.fsBody + 'px;line-height:1.85;color:' + t.body + ';" data-ed data-field="body1" contenteditable="true">' + esc(d.body1) + '</p>':'') + (d.urgency?'<p style="margin:20px 0 0 0;font-size:13px;font-weight:700;letter-spacing:1px;color:#af3630;text-transform:uppercase;" data-ed data-field="urgency" contenteditable="true">&#x26A1; ' + esc(d.urgency) + '</p>':'') + '</td></tr>' + hi + ps + mmCTA(d, ctaUrl) + mmFooter(sUrl);
+    rows = '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:48px 40px 40px;"><img src="' + LOGO + '" alt="Meat Merchant" width="110" style="display:block;margin:0 0 48px 0;' + (_theme==='cream'?'filter:brightness(0);':'') + '"><p style="margin:0 0 16px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;" data-ed data-field="label" contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0 0 24px 0;font-size:42px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.05;font-family:Impact,\'Arial Black\',sans-serif;" data-ed data-field="headline" contenteditable="true">' + hlHtml(d) + '</h1><div style="height:3px;background:#af3630;width:40px;margin-bottom:28px;"></div><p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed data-field="intro" contenteditable="true">' + esc(d.intro) + '</p>' + (d.body1?'<p style="margin:0 0 16px 0;font-size:' + dv.fsBody + 'px;line-height:1.85;color:' + t.body + ';" data-ed data-field="body1" contenteditable="true">' + esc(d.body1) + '</p>':'') + (d.urgency?'<p style="margin:20px 0 0 0;font-size:13px;font-weight:700;letter-spacing:1px;color:#af3630;text-transform:uppercase;" data-ed data-field="urgency" contenteditable="true">&#x26A1; ' + esc(d.urgency) + '</p>':'') + '</td></tr>' + hi + (bv('products')?ps:'') + (bv('cta')?mmCTA(d, ctaUrl):'') + (bv('footer')?mmFooter(sUrl):'');
   } else if (lid === 'urgency') {
     var urgBox = d.urgency ? '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:0 32px 32px;text-align:center;"><table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;width:100%;max-width:440px;border:2px dashed #af3630;"><tr><td style="padding:24px 28px;text-align:center;"><p style="margin:0 0 8px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">Don\'t Miss Out</p><p style="margin:0 0 16px 0;font-size:15px;line-height:1.8;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.urgency) + '</p><table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr><td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + ctaUrl + '" style="display:inline-block;padding:14px 32px;font-size:13px;font-weight:700;letter-spacing:2px;color:#ffffff;text-decoration:none;text-transform:uppercase;">' + esc(d.ctaText) + ' &rarr;</a></td></tr></table></td></tr></table></td></tr>' : '';
-    rows = mmHero(d) + hi + mmDiv() + '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:32px 32px 16px;"><p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed data-field="intro" contenteditable="true">' + esc(d.intro) + '</p>' + (d.body1?'<p style="margin:0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed data-field="body1" contenteditable="true">' + esc(d.body1) + '</p>':'') + '</td></tr>' + urgBox + ps + mmCTA(d, ctaUrl) + mmFooter(sUrl);
+    rows = (bv('hero')?mmHero(d):'') + (bv('heroImg')?hi:'') + mmDiv() + '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:32px 32px 16px;"><p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed data-field="intro" contenteditable="true">' + esc(d.intro) + '</p>' + (d.body1?'<p style="margin:0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed data-field="body1" contenteditable="true">' + esc(d.body1) + '</p>':'') + '</td></tr>' + urgBox + (bv('products')?ps:'') + (bv('cta')?mmCTA(d, ctaUrl):'') + (bv('footer')?mmFooter(sUrl):'');
   } else if (lid === 'split') {
     var splitTop = hImg ? '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:24px 32px 12px;"><img src="' + LOGO + '" alt="Meat Merchant" width="110" style="display:block;' + (_theme==='cream'?'filter:brightness(0);':'') + '"></td></tr><tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:0;"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="50%" style="vertical-align:top;padding:0;font-size:0;line-height:0;background-image:url(' + hImg + ');background-size:cover;background-position:center;background-repeat:no-repeat;">&nbsp;</td><td width="50%" bgcolor="' + t.footer + '" style="background-color:' + t.footer + ';vertical-align:middle;padding:28px 24px;"><p style="margin:0 0 10px 0;font-size:11px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;" data-ed data-field="label" contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0 0 10px 0;font-size:28px;font-weight:900;color:#ffffff;text-transform:uppercase;line-height:1.05;font-family:Impact,\'Arial Black\',sans-serif;" data-ed data-field="headline" contenteditable="true">' + hlHtml(d) + '</h1><p style="margin:0;font-size:13px;color:#888888;" data-ed data-field="subhead" contenteditable="true">' + esc(d.subhead) + '</p></td></tr></table></td></tr>' : mmHero(d);
-    rows = splitTop + mmDiv() + mmCopy(d) + ps + mmUrgency(d) + mmQuote(d) + mmCTA(d, ctaUrl) + mmFooter(sUrl);
+    rows = splitTop + mmDiv() + (bv('copy')?mmCopy(d):'') + ps + mmUrgency(d) + (bv('quote')?mmQuote(d):'') + (bv('cta')?mmCTA(d, ctaUrl):'') + (bv('footer')?mmFooter(sUrl):'');
   }
 
   return '<div style="background:#d8d8d8;padding:14px 0;"><table width="580" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;width:100%;margin:0 auto;background:' + t.bg + ';font-family:Arial,Helvetica,sans-serif;">' + rows + '</table></div>';
@@ -801,24 +811,25 @@ function buildExport() {
   if (!emailData) return '';
   var dv = getDesign();
   var pp = dv.padProds || 24;
-  // emailData is kept in sync by applyDesign() and syncEditFromPreview()
-  // so it always reflects the latest edits made in the preview or design panel
   var d = emailData;
   var x = Object.assign({}, d._x);
-  // Strip base64 images — they can't go into Klaviyo HTML
   x.hImg = (x.hImg && x.hImg.startsWith('data:')) ? '' : (x.hImg || '');
   x.prods = (x.prods || []).map(function(p) {
     return Object.assign({}, p, { img: (p.img && p.img.startsWith('data:')) ? '' : (p.img || '') });
   });
+  var t = tc();
   var subject = (document.getElementById('outSub') ? document.getElementById('outSub').innerText.trim() : d.subject) || d.subject;
   var preview = (document.getElementById('outPrev') ? document.getElementById('outPrev').innerText.trim() : d.preview) || d.preview;
-  var t = tc();
+  var prodTitle = (document.getElementById('prodSectionTitle') ? document.getElementById('prodSectionTitle').value.trim() || 'Featured Cuts' : 'Featured Cuts');
+  var IMPACT = "Impact,'Arial Black',sans-serif";
 
-  var heroRow = x.hImg ? '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:0 32px;font-size:0;line-height:0;"><img src="' + x.hImg + '" alt="" width="516" style="display:block;width:100%;max-width:516px;"></td></tr>' : '';
+  var heroRow = '';
+  if (bv('heroImg') && x.hImg) {
+    heroRow = '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:0 32px;font-size:0;line-height:0;"><img src="' + x.hImg + '" alt="" width="516" style="display:block;width:100%;max-width:516px;"></td></tr>';
+  }
 
   var prodRows = '';
-  var prodTitle = (document.getElementById('prodSectionTitle') ? document.getElementById('prodSectionTitle').value.trim() || 'Featured Cuts' : 'Featured Cuts');
-  if (x.prods && x.prods.length) {
+  if (bv('products') && x.prods && x.prods.length) {
     var prodRowsHtml = '';
     for (var ri = 0; ri < x.prods.length; ri += 2) {
       var rowProds = x.prods.slice(ri, ri + 2);
@@ -828,19 +839,96 @@ function buildExport() {
           (p.img ? '<img src="' + p.img + '" alt="' + esc(p.name) + '" width="100%" style="display:block;border-radius:3px;margin-bottom:20px;max-height:160px;object-fit:cover;">' : '') +
           '<p style="margin:16px 0 4px 0;font-size:' + dv.fsProdName + 'px;font-weight:700;color:' + t.head + ';">' + esc(p.name) + '</p>' +
           (p.desc ? '<p style="margin:0 0 6px 0;font-size:12px;line-height:1.5;color:' + t.muted + ';">' + esc(p.desc) + '</p>' : '') +
-          ((p.was && p.now) ? '<table cellpadding="0" cellspacing="0" border="0" style="margin:0 0 10px 0;"><tr><td style="padding-right:12px;"><span style="font-size:10px;font-weight:700;letter-spacing:2px;color:' + t.muted + ';text-transform:uppercase;">WAS</span><br><span style="font-size:13px;color:' + t.muted + ';text-decoration:line-through;">' + esc(p.was) + '</span></td><td><span style="font-size:10px;font-weight:700;letter-spacing:2px;color:#af3630;text-transform:uppercase;">NOW</span><br><span style="font-size:15px;font-weight:700;color:#af3630;">' + esc(p.now) + '</span></td></tr></table>' :
-          ((p.now || p.was) ? '<p style="margin:0 0 10px 0;font-size:14px;font-weight:700;color:#af3630;">' + esc(p.now || p.was) + '</p>' : '')) +
+          ((p.was && p.now) ?
+            '<table cellpadding="0" cellspacing="0" border="0" style="margin:0 0 10px 0;"><tr>' +
+            '<td style="padding-right:12px;"><span style="font-size:10px;font-weight:700;letter-spacing:2px;color:' + t.muted + ';text-transform:uppercase;">WAS</span><br><span style="font-size:13px;color:' + t.muted + ';text-decoration:line-through;">' + esc(p.was) + '</span></td>' +
+            '<td><span style="font-size:10px;font-weight:700;letter-spacing:2px;color:#af3630;text-transform:uppercase;">NOW</span><br><span style="font-size:15px;font-weight:700;color:#af3630;">' + esc(p.now) + '</span></td>' +
+            '</tr></table>' :
+            ((p.now || p.was) ? '<p style="margin:0 0 10px 0;font-size:14px;font-weight:700;color:#af3630;">' + esc(p.now || p.was) + '</p>' : '')) +
           (p.link ? '<table cellpadding="0" cellspacing="0" border="0"><tr><td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + esc(p.link) + '" style="display:inline-block;padding:8px 16px;font-size:11px;font-weight:700;letter-spacing:1.5px;color:#ffffff;text-decoration:none;text-transform:uppercase;">Buy Now</a></td></tr></table>' : '') +
           '</td>';
       }).join('');
       if (rowProds.length === 1 && x.prods.length > 1) rowCells += '<td width="48%"></td>';
-      prodRowsHtml += '<tr style="vertical-align:top">' + rowCells + '</tr><tr><td colspan="2" style="height:20px;font-size:0;line-height:0;">&nbsp;</td></tr>';
+      prodRowsHtml += '<tr style="vertical-align:top">' + rowCells + '</tr>' +
+        '<tr><td colspan="2" style="height:20px;font-size:0;line-height:0;">&nbsp;</td></tr>';
     }
-    prodRows = '<tr><td bgcolor="' + t.s2 + '" style="background-color:' + t.s2 + ';padding:8px 32px 4px 32px;"><p style="margin:0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">' + esc(prodTitle) + '</p></td></tr><tr><td bgcolor="' + t.s2 + '" style="background-color:' + t.s2 + ';padding:12px 24px 8px 24px;"><table width="100%" cellpadding="0" cellspacing="0" border="0">' + prodRowsHtml + '</table></td></tr>';
+    prodRows =
+      '<tr><td bgcolor="' + t.s2 + '" style="background-color:' + t.s2 + ';padding:8px 32px 4px 32px;">' +
+      '<p style="margin:0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">' + esc(prodTitle) + '</p></td></tr>' +
+      '<tr><td bgcolor="' + t.s2 + '" style="background-color:' + t.s2 + ';padding:12px 24px 8px 24px;">' +
+      '<table width="100%" cellpadding="0" cellspacing="0" border="0">' + prodRowsHtml + '</table></td></tr>';
   }
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="color-scheme" content="light only">\n<meta name="supported-color-schemes" content="light">\n<meta name="viewport" content="width=device-width,initial-scale=1.0">\n<title>' + esc(subject) + '</title>\n</head>\n<body style="margin:0;padding:0;background-color:' + t.bg + ';font-family:Arial,Helvetica,sans-serif;">\n<div style="display:none;font-size:1px;line-height:1px;max-height:0;overflow:hidden;">' + esc(preview) + '&nbsp;&#8199;&#65279;&#847;</div>\n<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';">\n<tr><td align="center" style="padding:20px 10px;">\n<table width="580" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;width:100%;">\n\n<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:40px 32px 32px 32px;"><img src="' + LOGO + '" alt="Meat Merchant" width="130" style="display:block;margin:0 0 36px 0;"><p style="margin:0 0 12px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">' + esc(d.label) + '</p><h1 style="margin:0;font-size:' + dv.fsHeadline + 'px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.0;font-family:Impact,\'Arial Black\',sans-serif;">' + esc(d.headline).replace(esc(d.headlineRed || '\x00'), '<span style="color:#af3630;">' + esc(d.headlineRed || '') + '</span>') + '</h1></td></tr>\n\n' + heroRow + '\n\n<tr><td bgcolor="#af3630" style="background-color:#af3630;height:4px;font-size:0;line-height:0;">&nbsp;</td></tr>\n\n<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:32px 32px 28px 32px;"><p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.intro) + '</p>' + (d.body1 ? '<p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.body1) + '</p>' : '') + (d.body2 ? '<p style="margin:0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.body2) + '</p>' : '') + '</td></tr>\n\n' + prodRows + '\n\n' + (d.urgency ? '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:14px 32px;text-align:center;"><p style="margin:0;font-size:13px;font-weight:700;letter-spacing:1px;color:#af3630;text-transform:uppercase;">&#x26A1; ' + esc(d.urgency) + '</p></td></tr>\n\n' : '') + (d.quoteText ? '<tr><td bgcolor="#af3630" style="background-color:#af3630;padding:28px 32px;"><p style="margin:0 0 10px 0;font-size:11px;font-weight:700;letter-spacing:2px;color:#ffffff;text-transform:uppercase;">&#x1F525; Matt The Butcher Says</p><p style="margin:0;font-size:15px;line-height:1.8;color:#ffffff;font-style:italic;">&ldquo;' + esc(d.quoteText) + '&rdquo;</p></td></tr>\n\n' : '') + '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:36px 32px;text-align:center;"><h2 style="margin:0 0 10px 0;font-size:32px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.1;font-family:Impact,\'Arial Black\',sans-serif;">' + esc(d.ctaHeadline) + '</h2><p style="margin:0 0 28px 0;font-size:14px;color:' + t.muted + ';">' + esc(d.ctaSubtext) + '</p><table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr><td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + esc(x.ctaUrl) + '" style="display:inline-block;padding:18px 44px;font-size:13px;font-weight:700;letter-spacing:2px;color:#ffffff;text-decoration:none;text-transform:uppercase;">' + esc(d.ctaText) + ' &rarr;</a></td></tr></table>' + (d.signoff ? '<p style="margin:16px 0 0 0;font-size:13px;color:' + t.dim + ';">' + esc(d.signoff) + '</p>' : '') + (d.ps ? '<p style="margin:12px 0 0 0;font-size:13px;color:#af3630;font-weight:600;"><strong>P.S.</strong> ' + esc(d.ps) + '</p>' : '') + '</td></tr>\n\n<tr><td bgcolor="#111111" style="background-color:#111111;padding:24px 32px;text-align:center;"><img src="' + LOGO + '" alt="Meat Merchant" width="100" style="display:block;margin:0 auto 14px auto;"><p style="margin:0 0 6px 0;font-size:12px;color:#555555;">' + ADDR + '</p><p style="margin:0 0 12px 0;font-size:12px;color:#444444;">You&rsquo;re receiving this as part of the Meat Merchant family.</p><p style="margin:0;font-size:12px;"><a href="{% unsubscribe %}" style="color:#af3630;text-decoration:none;">Unsubscribe</a> &nbsp;&middot;&nbsp; <a href="' + esc(x.sUrl) + '/policies/privacy-policy" style="color:#af3630;text-decoration:none;">Privacy Policy</a></p></td></tr>\n\n</table>\n</td></tr>\n</table>\n</body>\n</html>';
+  var redWord = d.headlineRed || '';
+  var headlineHtml = redWord ? esc(d.headline).replace(esc(redWord), '<span style="color:#af3630;">' + esc(redWord) + '</span>') : esc(d.headline);
+
+  var parts = [];
+  if (bv('hero')) parts.push(
+    '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:40px 32px 32px 32px;">' +
+    '<img src="' + LOGO + '" alt="Meat Merchant" width="130" style="display:block;margin:0 0 36px 0;">' +
+    '<p style="margin:0 0 12px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">' + esc(d.label) + '</p>' +
+    '<h1 style="margin:0;font-size:' + dv.fsHeadline + 'px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.0;font-family:' + IMPACT + ';">' + headlineHtml + '</h1>' +
+    '</td></tr>'
+  );
+  if (heroRow) parts.push(heroRow);
+  if (bv('divider')) parts.push('<tr><td bgcolor="#af3630" style="background-color:#af3630;height:4px;font-size:0;line-height:0;">&nbsp;</td></tr>');
+  if (bv('copy')) parts.push(
+    '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:32px 32px 28px 32px;">' +
+    '<p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.intro) + '</p>' +
+    (d.body1 ? '<p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.body1) + '</p>' : '') +
+    (d.body2 ? '<p style="margin:0;font-size:15px;line-height:1.85;color:' + t.body + ';">' + esc(d.body2) + '</p>' : '') +
+    '</td></tr>'
+  );
+  if (prodRows) parts.push(prodRows);
+  if (bv('urgency') && d.urgency) parts.push(
+    '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:14px 32px;text-align:center;">' +
+    '<p style="margin:0;font-size:13px;font-weight:700;letter-spacing:1px;color:#af3630;text-transform:uppercase;">&#x26A1; ' + esc(d.urgency) + '</p></td></tr>'
+  );
+  if (bv('quote') && d.quoteText) parts.push(
+    '<tr><td bgcolor="#af3630" style="background-color:#af3630;padding:28px 32px;">' +
+    '<p style="margin:0 0 10px 0;font-size:11px;font-weight:700;letter-spacing:2px;color:#ffffff;text-transform:uppercase;">&#x1F525; Matt The Butcher Says</p>' +
+    '<p style="margin:0;font-size:15px;line-height:1.8;color:#ffffff;font-style:italic;">&ldquo;' + esc(d.quoteText) + '&rdquo;</p></td></tr>'
+  );
+  if (bv('cta')) parts.push(
+    '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:36px 32px;text-align:center;">' +
+    '<h2 style="margin:0 0 10px 0;font-size:32px;font-weight:900;color:' + t.head + ';text-transform:uppercase;line-height:1.1;font-family:' + IMPACT + ';">' + esc(d.ctaHeadline) + '</h2>' +
+    '<p style="margin:0 0 28px 0;font-size:14px;color:' + t.muted + ';">' + esc(d.ctaSubtext) + '</p>' +
+    '<table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr>' +
+    '<td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + esc(x.ctaUrl) + '" style="display:inline-block;padding:18px 44px;font-size:13px;font-weight:700;letter-spacing:2px;color:#ffffff;text-decoration:none;text-transform:uppercase;">' + esc(d.ctaText) + ' &rarr;</a></td>' +
+    '</tr></table>' +
+    (d.signoff ? '<p style="margin:16px 0 0 0;font-size:13px;color:' + t.dim + ';">' + esc(d.signoff) + '</p>' : '') +
+    (d.ps ? '<p style="margin:12px 0 0 0;font-size:13px;color:#af3630;font-weight:600;"><strong>P.S.</strong> ' + esc(d.ps) + '</p>' : '') +
+    '</td></tr>'
+  );
+  if (bv('footer')) parts.push(
+    '<tr><td bgcolor="#111111" style="background-color:#111111;padding:24px 32px;text-align:center;">' +
+    '<img src="' + LOGO + '" alt="Meat Merchant" width="100" style="display:block;margin:0 auto 14px auto;">' +
+    '<p style="margin:0 0 6px 0;font-size:12px;color:#555555;">' + ADDR + '</p>' +
+    '<p style="margin:0 0 12px 0;font-size:12px;color:#444444;">You&rsquo;re receiving this as part of the Meat Merchant family.</p>' +
+    '<p style="margin:0;font-size:12px;">' +
+    '<a href="{% unsubscribe %}" style="color:#af3630;text-decoration:none;">Unsubscribe</a>' +
+    ' &nbsp;&middot;&nbsp; ' +
+    '<a href="' + esc(x.sUrl) + '/policies/privacy-policy" style="color:#af3630;text-decoration:none;">Privacy Policy</a>' +
+    '</p></td></tr>'
+  );
+
+  return '<!DOCTYPE html>\n' +
+    '<html lang="en">\n<head>\n' +
+    '<meta charset="UTF-8">\n' +
+    '<meta name="color-scheme" content="light only">\n' +
+    '<meta name="supported-color-schemes" content="light">\n' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1.0">\n' +
+    '<title>' + esc(subject) + '</title>\n' +
+    '</head>\n' +
+    '<body style="margin:0;padding:0;background-color:' + t.bg + ';font-family:Arial,Helvetica,sans-serif;">\n' +
+    '<div style="display:none;font-size:1px;line-height:1px;max-height:0;overflow:hidden;">' + esc(preview) + '&nbsp;&#8199;&#65279;&#847;</div>\n' +
+    '<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';">\n' +
+    '<tr><td align="center" style="padding:20px 10px;">\n' +
+    '<table width="580" cellpadding="0" cellspacing="0" border="0" style="max-width:580px;width:100%;">\n\n' +
+    parts.join('\n\n') +
+    '\n\n</table>\n</td></tr>\n</table>\n</body>\n</html>';
 }
+
 
 // ── MODALS ────────────────────────────────────────────────────
 function openPrev() {
@@ -1106,6 +1194,50 @@ function getBlockRows(d, hImg, prods, ctaUrl, sUrl) {
     .map(function(b) { return blockMap[b.id] ? blockMap[b.id]() : ''; })
     .join('');
 }
+
+
+// ── BLOCK VISIBILITY ─────────────────────────────────────────
+var BLOCKS = [
+  {id:'hero',    label:'Hero / Header',  default:true},
+  {id:'heroImg', label:'Hero Image',     default:true},
+  {id:'divider', label:'Red Divider',    default:true},
+  {id:'copy',    label:'Body Copy',      default:true},
+  {id:'products',label:'Products',       default:true},
+  {id:'urgency', label:'Urgency Bar',    default:true},
+  {id:'quote',   label:"Matt's Quote",   default:true},
+  {id:'cta',     label:'CTA Section',    default:true},
+  {id:'footer',  label:'Footer',         default:true},
+];
+var blockVis = {};
+BLOCKS.forEach(function(b){ blockVis[b.id] = b.default; });
+
+function initBlockToggles() {
+  var wrap = document.getElementById('blockTogglesWrap');
+  var container = document.getElementById('blockToggles');
+  if (!wrap || !container) return;
+  wrap.style.display = 'block';
+  container.innerHTML = '';
+  BLOCKS.forEach(function(b) {
+    var row = document.createElement('div');
+    row.className = 'block-row' + (blockVis[b.id] ? '' : ' off');
+    row.id = 'brow-' + b.id;
+    row.innerHTML = '<span class="block-label"><span class="drag-handle">&#9776;</span>' + b.label + '</span><span class="block-eye">' + (blockVis[b.id] ? '&#128065;' : '&#128683;') + '</span>';
+    row.onclick = function() { toggleBlock(b.id); };
+    container.appendChild(row);
+  });
+}
+
+function toggleBlock(id) {
+  blockVis[id] = !blockVis[id];
+  var row = document.getElementById('brow-' + id);
+  if (row) {
+    row.classList.toggle('off', !blockVis[id]);
+    row.querySelector('.block-eye').innerHTML = blockVis[id] ? '&#128065;' : '&#128683;';
+  }
+  renderPreview();
+}
+
+function bv(id) { return blockVis[id] !== false; }
 
 
 // ── SUBJECT / PREVIEW REGENERATION ───────────────────────────
