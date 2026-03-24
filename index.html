@@ -90,6 +90,7 @@ textarea{min-height:64px;line-height:1.5}
 .sbtn{background:var(--s4);border:1px solid var(--bd2);color:var(--txt2);font-size:11px;font-weight:600;font-family:var(--ff);padding:6px 12px;border-radius:5px;cursor:pointer;transition:all .15s}
 .sbtn:hover{border-color:#fff;color:#fff}
 .sbtn.red{background:var(--red);border-color:var(--red);color:#fff}
+.sbtn.red.no-data{opacity:.4;cursor:not-allowed}
 .sbtn.red:hover{background:var(--redd)}
 .stage-body{background:#e0e0e0;overflow-y:auto;max-height:calc(100vh - 300px)}
 [data-ed]{outline:none;cursor:text}
@@ -160,8 +161,8 @@ textarea{min-height:64px;line-height:1.5}
 .bm-row.hidden-block .bm-name{color:var(--txt3);text-decoration:line-through}
 .bm-row.hidden-block{opacity:.5}
 
-.toast{position:fixed;bottom:20px;right:20px;background:var(--s2);border:1px solid var(--bd);color:#fff;font-size:12px;padding:10px 16px;border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.5);transform:translateY(60px);opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);z-index:999}
-.toast.show{transform:translateY(0);opacity:1}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--s1);border:1px solid var(--red);color:#fff;font-size:13px;font-weight:600;padding:12px 22px;border-radius:8px;box-shadow:0 8px 32px rgba(0,0,0,.6);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);z-index:999;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 .toast.ok{border-color:var(--red)}
 </style>
 </head>
@@ -807,7 +808,7 @@ function openPrev() {
 }
 function closePrev() { document.getElementById('prevModal').style.display = 'none'; }
 function openHtml() {
-  if (!emailData) { toast('Generate an email first'); return; }
+  if (!emailData) { toast('\u26A0 Generate an email first then click Get HTML', false); return; }
   var L = LAYOUTS.find(function(l){return l.id===curLayout;});
   document.getElementById('htmlTitle').textContent = 'HTML \u2014 ' + (L ? L.name : '');
   document.getElementById('htmlTa').value = buildExport();
