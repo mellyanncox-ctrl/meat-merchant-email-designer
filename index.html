@@ -224,6 +224,10 @@ textarea{min-height:64px;line-height:1.5}
         <label>Image URL</label>
         <input type="url" id="hUrl" placeholder="Paste Shopify or Klaviyo image URL…">
       </div>
+      <div class="fg" id="splitWidthWrap" style="display:none;margin-top:8px">
+        <label>Split image width <span id="splitWidthVal" style="color:var(--red);font-weight:700">50%</span></label>
+        <input type="range" id="splitWidth" min="20" max="80" value="50" style="width:100%;accent-color:#af3630" oninput="updateSplitWidth(this.value)">
+      </div>
       <div id="hPreviewWrap" style="margin-top:6px;display:none">
         <img id="hPrev" src="" alt="" style="width:100%;max-height:80px;object-fit:cover;border-radius:5px;border:1px solid var(--bd2)">
       </div>
@@ -1288,6 +1292,27 @@ async function regenLines(type) {
   }
 }
 
+
+function updateSplitWidth(val) {
+  document.getElementById('splitWidthVal').textContent = val + '%';
+  // Update the split image td width in the preview directly
+  var stage = document.getElementById('stageBody');
+  if (!stage) return;
+  var tds = stage.querySelectorAll('td');
+  // Find the two side-by-side tds in the split layout
+  // The split table has exactly 2 tds with width% set
+  var splitTds = Array.from(tds).filter(function(td) {
+    var w = td.getAttribute('width') || td.style.width;
+    return w && (w.includes('%') || w === '50%');
+  });
+  // The first two are image and text panel
+  if (splitTds.length >= 2) {
+    splitTds[0].style.width = val + '%';
+    splitTds[0].setAttribute('width', val + '%');
+    splitTds[1].style.width = (100 - parseInt(val)) + '%';
+    splitTds[1].setAttribute('width', (100 - parseInt(val)) + '%');
+  }
+}
 
 // ── UTILS ─────────────────────────────────────────────────────
 function toast(msg, ok) {
