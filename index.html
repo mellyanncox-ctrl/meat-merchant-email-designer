@@ -96,6 +96,16 @@ textarea{min-height:64px;line-height:1.5}
 [data-ed]:hover{background:rgba(175,54,48,.1);border-radius:2px}
 [data-ed]:focus{background:rgba(175,54,48,.18);outline:1px solid #af3630;border-radius:2px}
 
+
+/* subject/preview alternatives */
+.alt-row{display:flex;align-items:center;gap:6px;margin-top:4px;flex-wrap:wrap}
+.alt-chip{background:var(--s2);border:1px solid var(--bd2);color:var(--txt2);font-size:10px;font-family:var(--ff);padding:4px 9px;border-radius:12px;cursor:pointer;transition:all .15s;line-height:1.4;text-align:left;max-width:100%}
+.alt-chip:hover{border-color:var(--red);color:#fff}
+.alt-chip.active{background:var(--red);border-color:var(--red);color:#fff}
+.regen-btn{background:none;border:1px solid var(--bd2);color:var(--txt3);font-family:var(--ff);font-size:10px;font-weight:600;padding:4px 10px;border-radius:12px;cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.04em}
+.regen-btn:hover{border-color:var(--red);color:var(--red)}
+.regen-btn.loading{opacity:.5;cursor:not-allowed}
+
 /* image resize wrapper */
 .img-wrap{position:relative;display:block;width:100%;margin-bottom:16px}
 .img-inner{position:relative;overflow:hidden;width:100%}
@@ -135,6 +145,20 @@ textarea{min-height:64px;line-height:1.5}
 
 /* settings modal */
 .sbox{background:#161616;border:1px solid var(--bd);border-radius:10px;width:500px;max-width:95vw;display:flex;flex-direction:column;overflow:hidden}
+
+
+/* block manager */
+.bm-list{display:flex;flex-direction:column;gap:4px}
+.bm-row{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:5px 8px;cursor:default;transition:background .15s;user-select:none}
+.bm-row.dragging{opacity:.4;background:var(--s4)}
+.bm-row.drag-over{border-color:var(--red);background:var(--s3)}
+.bm-drag{cursor:grab;color:var(--txt3);font-size:14px;line-height:1;padding:2px 2px;flex-shrink:0}
+.bm-drag:active{cursor:grabbing}
+.bm-name{flex:1;font-size:11px;font-weight:600;color:var(--txt);letter-spacing:.03em}
+.bm-eye{background:none;border:none;cursor:pointer;font-size:13px;color:var(--txt3);padding:2px 4px;border-radius:3px;line-height:1;flex-shrink:0;transition:color .15s}
+.bm-eye:hover{color:var(--red)}
+.bm-row.hidden-block .bm-name{color:var(--txt3);text-decoration:line-through}
+.bm-row.hidden-block{opacity:.5}
 
 .toast{position:fixed;bottom:20px;right:20px;background:var(--s2);border:1px solid var(--bd);color:#fff;font-size:12px;padding:10px 16px;border-radius:6px;box-shadow:0 6px 24px rgba(0,0,0,.5);transform:translateY(60px);opacity:0;transition:all .28s cubic-bezier(.34,1.56,.64,1);z-index:999}
 .toast.show{transform:translateY(0);opacity:1}
@@ -176,7 +200,7 @@ textarea{min-height:64px;line-height:1.5}
           <textarea id="hook" placeholder="e.g. Easter pre-order boxes — 3 sizes ($65/$95/$140). Order by April 12."></textarea>
         </div>
         <div class="fg"><label>Primary CTA text</label><input type="text" id="cta" placeholder="e.g. Order Your Box"></div>
-        <div class="fg"><label>Primary CTA URL</label><input type="url" id="ctaUrl" placeholder="https://meatmerchantonline.com.au/…"></div>
+        <div class="fg"><label>Primary CTA URL</label><input type="url" id="ctaUrl" placeholder="https://meatmerchantonline.com.au/…" value="https://www.meatmerchantonline.com.au/pages/build-your-box"></div>
         <div class="fg"><label>Tone</label><input type="text" id="tone" placeholder="e.g. urgent, warm, direct"></div>
       </div>
     </div>
@@ -203,6 +227,13 @@ textarea{min-height:64px;line-height:1.5}
     <div>
       <div class="sec-lbl">Store</div>
       <div class="fg"><label>Store URL</label><input type="url" id="sUrl" value="https://www.meatmerchantonline.com.au"></div>
+    </div>
+
+
+    <div>
+      <div class="sec-lbl">&#9776; Email Blocks</div>
+      <p style="font-size:10px;color:var(--txt3);line-height:1.5;margin-bottom:8px">Drag to reorder &middot; click eye to show/hide</p>
+      <div class="bm-list" id="bmList"></div>
     </div>
 
     <button class="btn-gen" id="genBtn" onclick="generate()">
@@ -535,7 +566,7 @@ function showSkel() {
 
 function renderCanvas() {
   var cv = document.getElementById('cv');
-  cv.innerHTML = '<div class="meta-bar"><div><div class="mf-lbl">Subject Line</div><div class="mv" id="outSub" contenteditable="true">' + esc(emailData.subject) + '</div></div><div><div class="mf-lbl">Preview Text</div><div class="mv" id="outPrev" contenteditable="true">' + esc(emailData.preview) + '</div></div></div><div class="lstrip"><span class="lstrip-lbl">Layout:</span>' + LAYOUTS.map(function(l){return '<button class="ltab' + (l.id===curLayout?' active':'') + '" onclick="switchLayout(\'' + l.id + '\')">' + l.name + '</button>';}).join('') + '</div><div class="stage" id="stage"><div class="stage-hdr"><span class="stage-name" id="sName"></span><span class="stage-tag" id="sTag"></span><div class="stage-acts"><button class="sbtn" onclick="openPrev()">Full Preview</button><button class="sbtn red" onclick="openHtml()">Get HTML for Klaviyo</button></div></div><div class="stage-body" id="stageBody"></div></div>';
+  cv.innerHTML = '<div class="meta-bar"><div><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px"><div class="mf-lbl" style="margin-bottom:0">Subject Line</div><button class="regen-btn" id="regenSubBtn" onclick="regenSubjects()">&#8635; Options</button></div><div class="mv" id="outSub" contenteditable="true">' + esc(emailData.subject) + '</div><div class="alt-row" id="subAlts"></div></div><div><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px"><div class="mf-lbl" style="margin-bottom:0">Preview Text</div><button class="regen-btn" id="regenPrevBtn" onclick="regenPreviews()">&#8635; Options</button></div><div class="mv" id="outPrev" contenteditable="true">' + esc(emailData.preview) + '</div><div class="alt-row" id="prevAlts"></div></div></div><div class="lstrip"><span class="lstrip-lbl">Layout:</span>' + LAYOUTS.map(function(l){return '<button class="ltab' + (l.id===curLayout?' active':'') + '" onclick="switchLayout(\'' + l.id + '\')">' + l.name + '</button>';}).join('') + '</div><div class="stage" id="stage"><div class="stage-hdr"><span class="stage-name" id="sName"></span><span class="stage-tag" id="sTag"></span><div class="stage-acts"><button class="sbtn" onclick="openPrev()">Full Preview</button><button class="sbtn red" onclick="openHtml()">Get HTML for Klaviyo</button></div></div><div class="stage-body" id="stageBody"></div></div>';
   setStageHdr();
   renderPreview();
 }
@@ -648,7 +679,7 @@ function buildPreview(lid, d) {
 
   var rows = '';
   if (lid === 'classic') {
-    rows = mmHero(d) + hi + mmDiv() + mmCopy(d) + ps + mmUrgency(d) + mmCTA(d, ctaUrl) + mmFooter(sUrl);
+    rows = getBlockRows(d, hImg, prods, ctaUrl, sUrl);
   } else if (lid === 'bold') {
     rows = '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:36px 32px 20px;"><img src="' + LOGO + '" alt="Meat Merchant" width="130" style="display:block;margin:0 0 24px 0;' + (_theme==='cream'?'filter:brightness(0);':'') + '"></td></tr>' + hi + '<tr><td bgcolor="' + t.footer + '" style="background-color:' + t.footer + ';padding:28px 32px 24px;"><p style="margin:0 0 10px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;" data-ed contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0 0 12px 0;font-size:54px;font-weight:900;color:#ffffff;text-transform:uppercase;line-height:.95;font-family:Impact,\'Arial Black\',sans-serif;" data-ed contenteditable="true">' + hlHtml(d) + '</h1><p style="margin:0;font-size:16px;color:#af3630;font-weight:700;" data-ed contenteditable="true">' + esc(d.subhead) + '</p></td></tr>' + mmDiv() + mmCopy(d) + ps + mmUrgency(d) + mmCTA(d, ctaUrl) + mmFooter(sUrl);
   } else if (lid === 'redlead') {
@@ -665,7 +696,7 @@ function buildPreview(lid, d) {
     var urgBox = d.urgency ? '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:0 32px 32px;text-align:center;"><table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;width:100%;max-width:440px;border:2px dashed #af3630;"><tr><td style="padding:24px 28px;text-align:center;"><p style="margin:0 0 8px 0;font-size:12px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;">Don\'t Miss Out</p><p style="margin:0 0 16px 0;font-size:15px;line-height:1.8;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.urgency) + '</p><table cellpadding="0" cellspacing="0" border="0" style="margin:0 auto;"><tr><td bgcolor="#af3630" style="background-color:#af3630;"><a href="' + ctaUrl + '" style="display:inline-block;padding:14px 32px;font-size:13px;font-weight:700;letter-spacing:2px;color:#ffffff;text-decoration:none;text-transform:uppercase;">' + esc(d.ctaText) + ' &rarr;</a></td></tr></table></td></tr></table></td></tr>' : '';
     rows = mmHero(d) + hi + mmDiv() + '<tr><td bgcolor="' + t.s1 + '" style="background-color:' + t.s1 + ';padding:32px 32px 16px;"><p style="margin:0 0 16px 0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.intro) + '</p>' + (d.body1?'<p style="margin:0;font-size:15px;line-height:1.85;color:' + t.body + ';" data-ed contenteditable="true">' + esc(d.body1) + '</p>':'') + '</td></tr>' + urgBox + ps + mmCTA(d, ctaUrl) + mmFooter(sUrl);
   } else if (lid === 'split') {
-    var splitTop = hImg ? '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:24px 32px 12px;"><img src="' + LOGO + '" alt="Meat Merchant" width="110" style="display:block;' + (_theme==='cream'?'filter:brightness(0);':'') + '"></td></tr><tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:0;"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="50%" style="vertical-align:top;padding:0;font-size:0;line-height:0;"><img src="' + hImg + '" alt="" width="290" style="display:block;width:100%;height:260px;object-fit:cover;"></td><td width="50%" bgcolor="' + t.footer + '" style="background-color:' + t.footer + ';vertical-align:middle;padding:28px 24px;"><p style="margin:0 0 10px 0;font-size:11px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;" data-ed contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0 0 10px 0;font-size:28px;font-weight:900;color:#ffffff;text-transform:uppercase;line-height:1.05;font-family:Impact,\'Arial Black\',sans-serif;" data-ed contenteditable="true">' + hlHtml(d) + '</h1><p style="margin:0;font-size:13px;color:#888888;" data-ed contenteditable="true">' + esc(d.subhead) + '</p></td></tr></table></td></tr>' : mmHero(d);
+    var splitTop = hImg ? '<tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:24px 32px 12px;"><img src="' + LOGO + '" alt="Meat Merchant" width="110" style="display:block;' + (_theme==='cream'?'filter:brightness(0);':'') + '"></td></tr><tr><td bgcolor="' + t.bg + '" style="background-color:' + t.bg + ';padding:0;"><table width="100%" cellpadding="0" cellspacing="0" border="0"><tr><td width="50%" style="vertical-align:top;padding:0;font-size:0;line-height:0;height:300px;"><img src="' + hImg + '" alt="" style="display:block;width:100%;height:100%;min-height:300px;object-fit:cover;"></td><td width="50%" bgcolor="' + t.footer + '" style="background-color:' + t.footer + ';vertical-align:middle;padding:28px 24px;height:300px;"><p style="margin:0 0 10px 0;font-size:11px;font-weight:700;letter-spacing:3px;color:#af3630;text-transform:uppercase;" data-ed contenteditable="true">' + esc(d.label) + '</p><h1 style="margin:0 0 10px 0;font-size:28px;font-weight:900;color:#ffffff;text-transform:uppercase;line-height:1.05;font-family:Impact,\'Arial Black\',sans-serif;" data-ed contenteditable="true">' + hlHtml(d) + '</h1><p style="margin:0;font-size:13px;color:#888888;" data-ed contenteditable="true">' + esc(d.subhead) + '</p></td></tr></table></td></tr>' : mmHero(d);
     rows = splitTop + mmDiv() + mmCopy(d) + ps + mmUrgency(d) + mmQuote(d) + mmCTA(d, ctaUrl) + mmFooter(sUrl);
   }
 
@@ -738,6 +769,7 @@ function makeResizable(container) {
 // ── BUILD EXPORT HTML ─────────────────────────────────────────
 function buildExport() {
   if (!emailData) return '';
+  var dv = getDesign();
   var d = emailData; var x = d._x;
   var subject = (document.getElementById('outSub') ? document.getElementById('outSub').innerText : d.subject) || d.subject;
   var preview = (document.getElementById('outPrev') ? document.getElementById('outPrev').innerText : d.preview) || d.preview;
@@ -922,6 +954,177 @@ function applyDesign() {
 }
 
 
+
+// ── BLOCK MANAGER ─────────────────────────────────────────────
+// Defines the order and visibility of email sections
+var _blocks = [
+  {id:'heroText',  name:'Hero / Header',   on:true},
+  {id:'heroImg',   name:'Hero Image',       on:true},
+  {id:'divider',   name:'Red Divider',      on:true},
+  {id:'copy',      name:'Body Copy',        on:true},
+  {id:'products',  name:'Products',         on:true},
+  {id:'urgency',   name:'Urgency Bar',      on:true},
+  {id:'quote',     name:"Matt's Quote",     on:true},
+  {id:'cta',       name:'CTA Section',      on:true},
+  {id:'footer',    name:'Footer',           on:true},
+];
+
+var _dragSrc = null;
+
+function initBlockManager() {
+  var list = document.getElementById('bmList');
+  if (!list) return;
+  list.innerHTML = '';
+  _blocks.forEach(function(b, i) {
+    var row = document.createElement('div');
+    row.className = 'bm-row' + (b.on ? '' : ' hidden-block');
+    row.draggable = true;
+    row.dataset.idx = i;
+
+    row.innerHTML =
+      '<span class="bm-drag" title="Drag to reorder">&#8942;&#8942;</span>' +
+      '<span class="bm-name">' + b.name + '</span>' +
+      '<button class="bm-eye" title="' + (b.on?'Hide':'Show') + ' block" onclick="toggleBlock(' + i + ')">' + (b.on?'&#128065;':'&#128683;') + '</button>';
+
+    row.addEventListener('dragstart', function(e) {
+      _dragSrc = i;
+      row.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    row.addEventListener('dragend', function() {
+      row.classList.remove('dragging');
+      document.querySelectorAll('.bm-row').forEach(function(r){ r.classList.remove('drag-over'); });
+    });
+    row.addEventListener('dragover', function(e) {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      row.classList.add('drag-over');
+    });
+    row.addEventListener('dragleave', function() {
+      row.classList.remove('drag-over');
+    });
+    row.addEventListener('drop', function(e) {
+      e.preventDefault();
+      row.classList.remove('drag-over');
+      if (_dragSrc === null || _dragSrc === i) return;
+      // Reorder _blocks array
+      var moved = _blocks.splice(_dragSrc, 1)[0];
+      var newIdx = _dragSrc < i ? i - 0 : i;
+      _blocks.splice(newIdx, 0, moved);
+      initBlockManager();
+      if (emailData) renderPreview();
+    });
+
+    list.appendChild(row);
+  });
+}
+
+function toggleBlock(i) {
+  _blocks[i].on = !_blocks[i].on;
+  initBlockManager();
+  if (emailData) renderPreview();
+}
+
+function getBlockRows(d, hImg, prods, ctaUrl, sUrl) {
+  // Returns the email rows in the current block order, respecting visibility
+  var blockMap = {
+    heroText: function() { return mmHero(d); },
+    heroImg:  function() { return hiRow(hImg); },
+    divider:  function() { return mmDiv(); },
+    copy:     function() { return mmCopy(d); },
+    products: function() { return prods && prods.length ? mmProds(prods) : ''; },
+    urgency:  function() { return mmUrgency(d); },
+    quote:    function() { return mmQuote(d); },
+    cta:      function() { return mmCTA(d, ctaUrl); },
+    footer:   function() { return mmFooter(sUrl); },
+  };
+  return _blocks
+    .filter(function(b) { return b.on; })
+    .map(function(b) { return blockMap[b.id] ? blockMap[b.id]() : ''; })
+    .join('');
+}
+
+
+// ── SUBJECT / PREVIEW REGENERATION ───────────────────────────
+async function regenSubjects() {
+  if (!emailData) { toast('Generate an email first'); return; }
+  var btn = document.getElementById('regenSubBtn');
+  btn.textContent = '...'; btn.classList.add('loading'); btn.disabled = true;
+  var alts = await regenLines('subject');
+  btn.innerHTML = '&#8635; Options'; btn.classList.remove('loading'); btn.disabled = false;
+  if (!alts) return;
+  var container = document.getElementById('subAlts');
+  container.innerHTML = '';
+  alts.forEach(function(alt) {
+    var chip = document.createElement('button');
+    chip.className = 'alt-chip';
+    chip.textContent = alt;
+    chip.onclick = function() {
+      document.getElementById('outSub').textContent = alt;
+      container.querySelectorAll('.alt-chip').forEach(function(c){c.classList.remove('active')});
+      chip.classList.add('active');
+    };
+    container.appendChild(chip);
+  });
+}
+
+async function regenPreviews() {
+  if (!emailData) { toast('Generate an email first'); return; }
+  var btn = document.getElementById('regenPrevBtn');
+  btn.textContent = '...'; btn.classList.add('loading'); btn.disabled = true;
+  var alts = await regenLines('preview');
+  btn.innerHTML = '&#8635; Options'; btn.classList.remove('loading'); btn.disabled = false;
+  if (!alts) return;
+  var container = document.getElementById('prevAlts');
+  container.innerHTML = '';
+  alts.forEach(function(alt) {
+    var chip = document.createElement('button');
+    chip.className = 'alt-chip';
+    chip.textContent = alt;
+    chip.onclick = function() {
+      document.getElementById('outPrev').textContent = alt;
+      container.querySelectorAll('.alt-chip').forEach(function(c){c.classList.remove('active')});
+      chip.classList.add('active');
+    };
+    container.appendChild(chip);
+  });
+}
+
+async function regenLines(type) {
+  var d = emailData;
+  var isSubject = type === 'subject';
+  var current = isSubject
+    ? (document.getElementById('outSub') ? document.getElementById('outSub').textContent : d.subject)
+    : (document.getElementById('outPrev') ? document.getElementById('outPrev').textContent : d.preview);
+
+  var prompt = isSubject
+    ? 'Write 3 alternative email subject lines for this Meat Merchant campaign. Current subject: "' + current + '". Campaign hook: ' + (d.intro || '') + ' ' + (d.body1 || '') + '. Keep each under 52 chars. Bold, direct, larrikin Meat Merchant voice. Use {{ person.first_name }} in at least one. Return ONLY a JSON array of 3 strings, nothing else.'
+    : 'Write 3 alternative email preview/preheader texts for this Meat Merchant campaign. Current preview: "' + current + '". Campaign hook: ' + (d.intro || '') + '. Keep each around 85 chars. Should complement but not repeat the subject. Return ONLY a JSON array of 3 strings, nothing else.';
+
+  try {
+    var headers = { 'Content-Type': 'application/json', 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' };
+    if (_apiKey) headers['x-api-key'] = _apiKey;
+    var res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST', headers: headers,
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514', max_tokens: 400,
+        system: 'You are a copywriter for Meat Merchant. Output ONLY raw valid JSON arrays. No markdown, no explanation.',
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    var data = await res.json();
+    var raw = data.content.map(function(b){return b.text||'';}).join('');
+    var clean = raw.replace(/```json|```/g,'').trim();
+    var arr = JSON.parse(clean);
+    return Array.isArray(arr) ? arr.slice(0,3) : null;
+  } catch(e) {
+    console.error('regen error:', e);
+    toast('Could not generate options');
+    return null;
+  }
+}
+
+
 // ── UTILS ─────────────────────────────────────────────────────
 function toast(msg, ok) {
   var el = document.getElementById('toast');
@@ -934,6 +1137,7 @@ updateKeyStatus(); updateThemeBtns();
 var thBtn = document.getElementById('themeBtn');
 if (thBtn) thBtn.innerHTML = _theme === 'cream' ? '&#x1F319; Dark Theme' : '&#127763; Cream Theme';
 addProd();
+initBlockManager();
 </script>
 </body>
 </html>
