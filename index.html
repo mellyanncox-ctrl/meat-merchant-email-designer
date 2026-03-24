@@ -636,11 +636,38 @@ function renderPreview() {
   if (body && emailData) {
     body.innerHTML = buildPreview(curLayout, emailData);
     makeResizable(body);
-    // Wire up blur events so direct edits sync back to emailData
+    initSplitResize(body);
     body.querySelectorAll('[data-ed][data-field]').forEach(function(el) {
       el.addEventListener('blur', function() { syncEditFromPreview(this); });
     });
   }
+}
+
+function initSplitResize(container) {
+  var imgTd = container.querySelector('#splitImgTd');
+  var dragBar = container.querySelector('#splitDragBar');
+  if (!imgTd || !dragBar) return;
+  var dragging = false, startX = 0, startW = 0, tableW = 0;
+  dragBar.addEventListener('mousedown', function(e) {
+    e.preventDefault();
+    dragging = true;
+    startX = e.clientX;
+    startW = imgTd.getBoundingClientRect().width;
+    var tbl = imgTd.closest('table');
+    tableW = tbl ? tbl.getBoundingClientRect().width : 580;
+    document.body.style.cursor = 'ew-resize';
+  });
+  document.addEventListener('mousemove', function(e) {
+    if (!dragging) return;
+    var newW = Math.max(80, Math.min(tableW - 80, startW + (e.clientX - startX)));
+    var pct = Math.round((newW / tableW) * 100);
+    imgTd.style.width = pct + '%';
+    var rightTd = imgTd.nextElementSibling;
+    if (rightTd) rightTd.style.width = (100 - pct) + '%';
+  });
+  document.addEventListener('mouseup', function() {
+    if (dragging) { dragging = false; document.body.style.cursor = ''; }
+  });
 }
 
 // ── EMAIL BUILDER HELPERS ─────────────────────────────────────
