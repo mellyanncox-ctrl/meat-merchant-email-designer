@@ -103,9 +103,10 @@ textarea{min-height:64px;line-height:1.5}
 .block-row{display:flex;align-items:center;justify-content:space-between;padding:7px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;transition:all .15s}
 .block-row.deleted{opacity:.35;border-style:dashed}
 .block-label{font-size:11px;font-weight:500;color:var(--txt2);display:flex;align-items:center;gap:7px}
-.block-del{background:none;border:none;color:var(--txt3);cursor:pointer;font-size:13px;padding:2px 5px;border-radius:3px;line-height:1;transition:all .15s;font-family:var(--ff)}
-.block-del:hover{background:var(--red);color:#fff;border-radius:3px}
-.block-undo{background:none;border:none;color:var(--red);cursor:pointer;font-size:10px;font-weight:600;font-family:var(--ff);padding:2px 6px;border-radius:3px;display:none;letter-spacing:.04em}
+.block-del{background:var(--s3);border:1px solid var(--bd2);color:var(--txt2);cursor:pointer;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;line-height:1;transition:all .15s;font-family:var(--ff);white-space:nowrap}
+.block-del:hover{background:var(--red);border-color:var(--red);color:#fff}
+.block-undo{background:none;border:1px solid var(--red);color:var(--red);cursor:pointer;font-size:10px;font-weight:600;font-family:var(--ff);padding:3px 8px;border-radius:4px;display:none;letter-spacing:.04em}
+.block-undo:hover{background:var(--red);color:#fff}
 .block-row.deleted .block-del{display:none}
 .block-row.deleted .block-undo{display:inline}
 
@@ -247,7 +248,12 @@ textarea{min-height:64px;line-height:1.5}
       <div class="bm-list" id="bmList"></div>
     </div>
 
-    <button class="btn-gen" id="genBtn" onclick="generate()">
+    <div id="blockTogglesWrap" style="display:none">
+      <div class="sec-lbl">Email Blocks <span style="font-size:9px;color:var(--txt3);font-weight:400;letter-spacing:0">&#10005; to remove from email</span></div>
+      <div class="fstack" id="blockToggles"></div>
+    </div>
+
+        <button class="btn-gen" id="genBtn" onclick="generate()">
       <span class="bt">Generate Email</span>
       <div class="spin"></div>
     </button>
@@ -1229,12 +1235,12 @@ function initBlockToggles() {
     label.textContent = b.label;
     var delBtn = document.createElement('button');
     delBtn.className = 'block-del';
-    delBtn.innerHTML = '&#10005; Remove';
+    delBtn.innerHTML = '&#10005;';
     delBtn.title = 'Remove this block from the email';
     delBtn.onclick = function(e) { e.stopPropagation(); deleteBlock(b.id); };
     var undoBtn = document.createElement('button');
     undoBtn.className = 'block-undo';
-    undoBtn.textContent = 'Undo';
+    undoBtn.innerHTML = '&#8617; Undo';
     undoBtn.onclick = function(e) { e.stopPropagation(); restoreBlock(b.id); };
     row.appendChild(label);
     row.appendChild(delBtn);
