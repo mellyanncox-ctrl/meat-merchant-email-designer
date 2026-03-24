@@ -248,7 +248,7 @@ textarea{min-height:64px;line-height:1.5}
       <div class="bm-list" id="bmList"></div>
     </div>
 
-    <div id="blockTogglesWrap" style="display:none">
+    <div id="blockTogglesWrap">
       <div class="sec-lbl">Email Blocks <span style="font-size:9px;color:var(--txt3);font-weight:400;letter-spacing:0">&#10005; to remove from email</span></div>
       <div class="fstack" id="blockToggles"></div>
     </div>
@@ -981,6 +981,8 @@ function openSettings() {
   var inp = document.getElementById('apiKeyInput');
   if (inp && _apiKey) inp.value = _apiKey;
   updateKeyStatus(); updateThemeBtns();
+// Show email blocks panel immediately with default state
+initBlockToggles();
   document.getElementById('settingsModal').style.display = 'flex';
 }
 function closeSettings() { document.getElementById('settingsModal').style.display = 'none'; }
@@ -1355,6 +1357,8 @@ function toast(msg, ok) {
 
 // ── INIT ──────────────────────────────────────────────────────
 updateKeyStatus(); updateThemeBtns();
+// Show email blocks panel immediately with default state
+initBlockToggles();
 var thBtn = document.getElementById('themeBtn');
 if (thBtn) thBtn.innerHTML = _theme === 'cream' ? '&#x1F319; Dark Theme' : '&#127763; Cream Theme';
 addProd();
